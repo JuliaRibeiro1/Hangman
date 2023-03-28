@@ -39,7 +39,7 @@ getAll(".key-btn").forEach(key => key.addEventListener("click",(e) => {
 }))
 function wordIncludesLetterCheck(e) {
     if(foods[randomWord].includes(e.target.textContent)) {
-        let check = repetedLettersCheck(e.target.textContent)
+        let check = getLetterIndex(e.target.textContent)
         console.log(fillWord(check,e.target.textContent))
   
 }}
@@ -50,7 +50,7 @@ function fillWord(check,letter) {
     updateWord()
     return wordPlaceholderArr
 }
-function repetedLettersCheck(letter) {
+function getLetterIndex(letter) {
     let rightLetterIndexArr = []
     let wordArr = Array.from(foods[randomWord])
     
@@ -61,6 +61,12 @@ function repetedLettersCheck(letter) {
     }
     return rightLetterIndexArr
 }
+function head() {
+    return get(".hangman").innerHTML += `<div ><svg class="head">
+    <circle cx="51%" cy="50" r="30" stroke=white fill=transparent />
+  </svg></div>`
+}
+head()
 
 fetch('https://api.dictionaryapi.dev/api/v2/entries/en/cheese')
 	.then(response => response.json())
