@@ -62,11 +62,32 @@ function getLetterIndex(letter) {
     return rightLetterIndexArr
 }
 function head() {
-    return get(".hangman").innerHTML += `<div ><svg class="head">
-    <circle cx="51%" cy="50" r="30" stroke=white fill=transparent />
+    return get(".hangman").innerHTML += `<div class="head-container"><svg class="head">
+    <circle cx=80% cy=80 r=30 stroke=white fill=transparent />
   </svg></div>`
 }
+function leftArm() {
+    return get(".hangman").innerHTML += `<div class="left-arm-container"><svg class="left-arm">
+    <rect x=38% y=0 width=5 height=80 fill=white></rect>
+  </svg></div>`
+}
+
+function rightArm() {
+    return get(".hangman").innerHTML += `<div class="right-arm-container"><svg class="right-arm">
+    <rect x=62% y=0 width=5 height=80 fill=white />
+   
+  </svg></div>`
+}
+function body() {
+    return get(".hangman").innerHTML += `<div class="body-container"><svg class="body">
+    <rect x=50% y=0 width=5 height=110 fill=white ></rect>
+  </svg></div>`
+}
+
 head()
+body()
+leftArm()
+rightArm()
 
 fetch('https://api.dictionaryapi.dev/api/v2/entries/en/cheese')
 	.then(response => response.json())
