@@ -56,9 +56,10 @@ body {
     font-family: 'Orbitron', sans-serif;
   
 }
-.game-container {
-  width: 98vw;
+.game-container > div{
+  width: 90vw;
     margin: 0 auto;
+flex-direction: column;
     justify-content: center;
     display: flex;
     align-items: center;
