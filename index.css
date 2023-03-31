@@ -53,6 +53,7 @@ body {
     background-color: rgb(37, 38, 41);
     color:white;
     width: 95vw;
+    font-family: 'Orbitron', sans-serif;
   
 }
 .game-container {
@@ -137,7 +138,11 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: center;*/
-    position: relative;
+    position: absolute;
+    margin-top: -3%;
+  
+    bottom: 80%;
+    ;
 
 }
 .head-container {
@@ -201,9 +206,7 @@ button {
     position: absolute;
 }
 .body {
-    
     stroke-width:5;
-   
     transform: rotate(360deg);
    animation: bodyAnimation 2s ease-in;
  
@@ -211,6 +214,38 @@ button {
 .open:before,.open:after {
     display: block;
 }
+/*MENU */
+.menu-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-transform: uppercase;
+}
+.menu-container h1 {
+    margin-bottom: 1.6em;
+    font-size: 2.8rem;
+    font-weight: 300;
+}
+.menu-option-btn{
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    color:rgb(236, 236, 236);
+    background-color: #029980;
+    margin-bottom: 1.9em;
+    padding: 1.2em 3em;
+    font-size: 1.2rem;
+    border-radius: 20%/60%;
+    box-shadow: 0 5px 15px #00000075;
+}
+.menu-option-btn:hover {
+    transform: scale(1.2);
+}
+
 @keyframes headAnimation {
     to {
        

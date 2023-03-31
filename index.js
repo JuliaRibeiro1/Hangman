@@ -66,6 +66,19 @@ get(".info-icon").addEventListener("mouseover",async () => {
     renderClue(clue)
     
 })
+function renderMenu() {
+    let menu = `<div class=menu-container>
+        <h1>hangman</h1>
+        <div class=menu-options-container>
+        <button class=menu-option-btn>Easy</button>
+        <button class=menu-option-btn>Medium</button>
+        <button class=menu-option-btn>Hard</button>
+        </div>
+
+    </div>`
+    return get(".game-container").innerHTML = menu
+}
+renderMenu()
 function renderClue(clue) {
     get(".clue-container").classList.add("open")
     get(".clue-container").setAttribute("clue",clue)
