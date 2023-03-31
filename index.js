@@ -3,8 +3,10 @@ import {foods} from "./wordsData.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
-let randomWord = Math.floor(Math.random() * foods.length)
-let wordPlaceholderArr = new Array(foods[randomWord].length)
+let randomWordIndex = Math.floor(Math.random() * foods.length)
+let randomWord = foods[randomWordIndex]
+console.log(randomWord)
+let wordPlaceholderArr = new Array(foods[randomWordIndex].length)
 wordPlaceholderArr.fill(`_`)
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
@@ -14,10 +16,8 @@ alphabetArr.map((letter) => {
     get(".keyboard-container").innerHTML += renderKeys(letter)
 
 })
-function style() {
 
-}
-console.log(foods[randomWord])
+console.log(foods[randomWordIndex])
 function updateWord() {
 let loopPlaceholder = ""
 console.log(wordPlaceholderArr)
@@ -38,7 +38,7 @@ getAll(".key-btn").forEach(key => key.addEventListener("click",(e) => {
 
 }))
 function wordIncludesLetterCheck(e) {
-    if(foods[randomWord].includes(e.target.textContent)) {
+    if(randomWord.includes(e.target.textContent)) {
         let check = getLetterIndex(e.target.textContent)
         console.log(fillWord(check,e.target.textContent))
   
@@ -52,7 +52,7 @@ function fillWord(check,letter) {
 }
 function getLetterIndex(letter) {
     let rightLetterIndexArr = []
-    let wordArr = Array.from(foods[randomWord])
+    let wordArr = Array.from(randomWord)
     
     for(let i = 0; i < wordArr.length;i++) {
         if(wordArr[i] == letter) {
@@ -61,35 +61,35 @@ function getLetterIndex(letter) {
     }
     return rightLetterIndexArr
 }
-function head() {
-    return get(".hangman").innerHTML += `<div class="head-container"><svg class="head">
-    <circle cx=80% cy=80 r=30 stroke=white fill=transparent />
-  </svg></div>`
+get(".info-icon").addEventListener("mouseover",async () => {
+    let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
+    renderClue(clue)
+    
+})
+function renderClue(clue) {
+    get(".clue-container").classList.add("open")
+    get(".clue-container").setAttribute("clue",clue)
 }
-function leftArm() {
-    return get(".hangman").innerHTML += `<div class="left-arm-container"><svg class="left-arm">
-    <rect x=38% y=0 width=5 height=80 fill=white></rect>
-  </svg></div>`
+get(".info-icon").addEventListener("mouseleave", () => {
+    get(".clue-container").classList.remove("open")
+     get(".clue-container").setAttribute("clue","")/*.innerHTML = 
+        `<div>
+            <p>${clue}</p>
+        </div>`*/
+})
+console.log(randomWord)
+
+async function getWordClue(url,word) {
+    try{
+        const res = await fetch(`${url}${word}`) 
+        
+        if(!res.ok) {
+          throw Error("Cor indisponível")
+        }
+        const data = await res.json()
+  return data[0].meanings[0].definitions[0].definition
+
+}catch(err){alert(err)};
 }
 
-function rightArm() {
-    return get(".hangman").innerHTML += `<div class="right-arm-container"><svg class="right-arm">
-    <rect x=62% y=0 width=5 height=80 fill=white />
-   
-  </svg></div>`
-}
-function body() {
-    return get(".hangman").innerHTML += `<div class="body-container"><svg class="body">
-    <rect x=50% y=0 width=5 height=110 fill=white ></rect>
-  </svg></div>`
-}
-
-head()
-body()
-leftArm()
-rightArm()
-
-fetch('https://api.dictionaryapi.dev/api/v2/entries/en/cheese')
-	.then(response => response.json())
-	.then(response => console.log(response))
-	.catch(err => console.error(err));
+//https://api.dictionaryapi.dev/api/v2/entries/en/

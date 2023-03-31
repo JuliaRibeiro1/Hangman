@@ -3,7 +3,46 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+.info-icon {
+    width: 40px; 
+}
+.clue-container {
+    position: relative;
+    right: -45%;
+    margin-top: 1em;
+    margin-right: 1em;
+}
+.clue-container:after {
+    content: attr(clue);
+    transform: translate(-50%,0%);
+    left:50%;
+    top:115%;
+    width: 100%;
+    min-width: 150px;
+    max-width: 250px;
+    word-wrap: break-word;
+    padding: 1em;
+    height: auto;
+    margin: .3em;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.438);
+    background-color: rgb(19, 21, 22);
+}
+.clue-container:before {
+    content: "";
+    display: block;
+    border:10px solid #000;
+    height: 10%;
+    bottom:-35%;
+    
+    transform: translate(-25%,0%);
+    left:25%;
+    transform: rotate(90deg);
+    border-color: transparent rgb(19, 21, 22) transparent transparent;
+}
+.clue-container:before,.clue-container:after {
+    position: absolute;
+    display: none
+}
 .flex {
     display:flex;
     flex-direction: column;
@@ -14,6 +53,7 @@ body {
     background-color: rgb(37, 38, 41);
     color:white;
     width: 95vw;
+  
 }
 .game-container {
   width: 98vw;
@@ -98,6 +138,7 @@ button {
     align-items: center;
     justify-content: center;*/
     position: relative;
+
 }
 .head-container {
    /* width: 100wv;
@@ -108,47 +149,94 @@ button {
 .head {
     margin-top: -58px;
     stroke-width:5;
+    margin-bottom: 0;
     stroke-dasharray:471;
     stroke-dashoffset: 471;
     transform: rotate(-90deg);
     transform-origin: center;
     animation: 1s headAnimation ease-in forwards;
 }
+.string-container {
+    
+}
 .body-container {
-    margin-top: -135px;
-  
+    height: 190px;
+    top:43%;
+    position: absolute;
+   
+
 }
 .left-arm-container {
     transform: rotate(25deg);
-    margin-top: -145px;
+    /*margin-top: -320px;*/
+    stroke-width:5;
+   top:50%;
+    position: absolute;
+}
+.left-arm {
+  /*  animation: leftArmAnimation 2s ;*/
 }
 .right-arm-container {
     transform: rotate(-25deg);
-    margin-top: -152px;
+    top:50%;
+    stroke-width:5;
+    position: absolute;
+   /* margin-top: -152px;*/
+
+}
+.left-leg-container {
+    stroke-width: 5;
+    transform: rotate(25deg);
+    margin-top: -15%;
+    top:100%;
+    stroke-width:5;
+    position: absolute;
+}
+.right-leg-container {
+    stroke-width: 5;
+    transform: rotate(-25deg);
+    margin-top: -15%;
+    top:100%;
+    stroke-width:5;
+    position: absolute;
 }
 .body {
-    stroke-dasharray: 10;
-    stroke-dashoffset: -10;
-    animation: bodyAnimation 2s ease-in;
+    
+    stroke-width:5;
+   
+    transform: rotate(360deg);
+   animation: bodyAnimation 2s ease-in;
+ 
+}
+.open:before,.open:after {
+    display: block;
 }
 @keyframes headAnimation {
-    0% {
-        stroke-dashoffset: 471;
-      }
-      100% {
+    to {
+       
         stroke-dashoffset: 0;
       }
 }
 @keyframes bodyAnimation {
     from {
-        
+       
         height: 0;
-      }
       
+      }
       to {
-        height: 110px;
+        
+        height: 120px;
       }
 }
+@keyframes leftArmAnimation {
+    from {
+        height: 0;
+      }
+      to {
+        height: 90px;
+      }
+}
+
 
 @media(min-width:600px) {
    /* .keyboard-container {
