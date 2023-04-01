@@ -3,12 +3,7 @@ import {foods,words} from "./wordsData.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
-/*let randomWordIndex = Math.floor(Math.random() * foods.length)
-let randomWord = foods[randomWordIndex]*/
 
-/*let wordPlaceholderArr = new Array(foods[randomWordIndex].length)
-wordPlaceholderArr.fill(`_`)*/
-//console.log(wordPlaceholderArr)
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let easyMode = words.easy
 let mediumMode = words.medium
@@ -18,10 +13,7 @@ let randomWord;
 function renderKeyboard() {
     let keys = ""
 alphabetArr.map((letter) => {
-   
     keys += renderKeys(letter)
-    //console.log(c)
-  
 
 })
 return keys
@@ -88,7 +80,7 @@ getAll(".key-btn").forEach(key => key.addEventListener("click",(e) => {
         console.log()
     wordIncludesLetterCheck(e)
     clickedKeysArr.push(e.target)
-   
+
     }
     console.log(clickedKeysArr)
 
@@ -118,28 +110,23 @@ function getLetterIndex(letter) {
     }
     return rightLetterIndexArr
 }
-/*get(".info-icon").addEventListener("mouseover",async () => {
-    let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
-    renderClue(clue)
-})*/
-
-//})
+let currentMode;
 document.body.addEventListener("click", (e) => {
     if(e.target.id == "easy-mode-btn") {
-        getRandomWord(easyMode)
-        fillArrPlaceholder(easyMode)
+        currentMode = easyMode
+        resetGame(currentMode)
         renderGame()
 
     }
     else if(e.target.id == "medium-mode-btn") {
-        getRandomWord(mediumMode)
-        fillArrPlaceholder(mediumMode)
+        currentMode = mediumMode
+        resetGame(currentMode)
         renderGame()
 
     }
     else if(e.target.id == "hard-mode-btn") {
-        getRandomWord(hardMode)
-        fillArrPlaceholder(hardMode)
+        currentMode = hardMode
+        resetGame(currentMode)
         renderGame()
     }
     else if(e.target.className == "key-btn") {
@@ -149,15 +136,25 @@ document.body.addEventListener("click", (e) => {
         clickedKeysArr.push(e.target.textContent)
         e.target.disabled = true
        checkWin()
-        }
-        
-
+        } 
     }  
 })
+function resetGame(mode) {
+    getRandomWord(mode)
+    fillArrPlaceholder(mode)
+}
 function checkWin() {
     if(!wordPlaceholderArr.includes("_")) {
-        console.log("freito")
+        setTimeout(() => {
+            resetKeyboard()
+            clickedKeysArr.length = 0
+            resetGame(currentMode)
+            get(".word").innerHTML = updateWord()
+        },1000)
     }
+}
+function resetKeyboard() {
+    getAll(".key-btn").forEach(key => key.disabled = false)
 }
 document.body.addEventListener("mouseover",async (e) => {
     if(e.target.className == "info-icon") {
@@ -170,16 +167,7 @@ document.body.addEventListener("mouseover",async (e) => {
     get(".clue-container").setAttribute("clue","")
    }
 }) 
-/*document.body.addEventListener("mouseleave", (e) => {
-   if(e.target.className !== "info-icon") {
-        console.log("Oi")
-        get(".clue-container").classList.remove("open")
-        get(".clue-container").setAttribute("clue","")
-    }
-}) */
-/*get(".menu-option-btn").addEventListener("click",() => {
-    console.log("OI")
-})*/
+
 getAll(".menu-option-btn").forEach(btn => btn.addEventListener("click",() => {
     console.log("Oiiii")
 }))
