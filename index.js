@@ -3,17 +3,17 @@ import {foods,words} from "./wordsData.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
-let randomWordIndex = Math.floor(Math.random() * foods.length)
-let randomWord = foods[randomWordIndex]
+/*let randomWordIndex = Math.floor(Math.random() * foods.length)
+let randomWord = foods[randomWordIndex]*/
 
-let wordPlaceholderArr = new Array(foods[randomWordIndex].length)
-wordPlaceholderArr.fill(`_`)
-console.log(wordPlaceholderArr)
+/*let wordPlaceholderArr = new Array(foods[randomWordIndex].length)
+wordPlaceholderArr.fill(`_`)*/
+//console.log(wordPlaceholderArr)
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let easyMode = words.easy
 let mediumMode = words.medium
 let hardMode = words.hard
-
+let randomWord;
 
 function renderKeyboard() {
     let keys = ""
@@ -26,26 +26,37 @@ alphabetArr.map((letter) => {
 })
 return keys
 }
+let wordPlaceholderArr;
+function fillArrPlaceholder(mode) {
+    let randomWordIndex = Math.floor(Math.random() * mode.length)
+//let randomWord = foods[randomWordIndex]*/
+
+wordPlaceholderArr= new Array(randomWord.length)
+wordPlaceholderArr.fill(`_`)
+    return wordPlaceholderArr
+}
 
 function getRandomWord(mode) {
     let randomWordIndex = Math.floor(Math.random() * mode.length)
-    let randomWord = mode[randomWordIndex]
+    randomWord = mode[randomWordIndex]
+    console.log(randomWord.trim())
+    randomWord = randomWord.replaceAll(' ', '');
     return randomWord
 }
-console.log(foods[randomWordIndex])
+//console.log(foods[randomWordIndex])
 function updateWord() {
 let loopPlaceholder = ""
 
 wordPlaceholderArr.map((letter) => {
    loopPlaceholder += `<div class="word-placeholder">${letter}</div>`
    //wordPlaceholderArr.fill()
-   
-   
+
 })
 //wordPlaceholderArr.fill(loopPlaceholder)
 return loopPlaceholder
 }
 let gameHtml = document.createElement("div")
+
 function renderGame() {
    // console.log(a)
    get(".game-container").removeChild(menuHtml)
@@ -70,12 +81,19 @@ function renderKeys(letter) {
 
     return `<button class=key-btn>${letter}</button>`
 }
-
+let clickedKeysArr = []
 getAll(".key-btn").forEach(key => key.addEventListener("click",(e) => {
-    console.log("Oi")
+    console.log("OI")
+    if(!clickedKeysArr.includes(e.target)) {
+        console.log()
     wordIncludesLetterCheck(e)
+    clickedKeysArr.push(e.target)
+   
+    }
+    console.log(clickedKeysArr)
 
 }))
+
 function wordIncludesLetterCheck(e) {
     if(randomWord.includes(e.target.textContent)) {
         let check = getLetterIndex(e.target.textContent)
@@ -109,21 +127,38 @@ function getLetterIndex(letter) {
 document.body.addEventListener("click", (e) => {
     if(e.target.id == "easy-mode-btn") {
         getRandomWord(easyMode)
+        fillArrPlaceholder(easyMode)
         renderGame()
 
     }
     else if(e.target.id == "medium-mode-btn") {
         getRandomWord(mediumMode)
+        fillArrPlaceholder(mediumMode)
+        renderGame()
 
     }
     else if(e.target.id == "hard-mode-btn") {
         getRandomWord(hardMode)
+        fillArrPlaceholder(hardMode)
+        renderGame()
     }
     else if(e.target.className == "key-btn") {
+        if(!clickedKeysArr.includes(e.target.textContent)) {
+            console.log()
         wordIncludesLetterCheck(e)
-    }
-    
+        clickedKeysArr.push(e.target.textContent)
+        e.target.disabled = true
+       checkWin()
+        }
+        
+
+    }  
 })
+function checkWin() {
+    if(!wordPlaceholderArr.includes("_")) {
+        console.log("freito")
+    }
+}
 document.body.addEventListener("mouseover",async (e) => {
     if(e.target.className == "info-icon") {
         let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
@@ -166,17 +201,6 @@ function renderClue(clue) {
     get(".clue-container").classList.add("open")
     get(".clue-container").setAttribute("clue",clue)
 }
-/*if(get(".info-icon")) {
-    console.log("Oi")
-get(".info-icon").addEventListener("mouseleave", () => {
-    get(".clue-container").classList.remove("open")
-     get(".clue-container").setAttribute("clue","")/*.innerHTML = 
-        `<div>
-            <p>${clue}</p>
-        </div>
-})*/
-//}
-console.log(randomWord)
 
 async function getWordClue(url,word) {
     try{
