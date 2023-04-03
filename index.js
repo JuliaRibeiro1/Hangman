@@ -8,7 +8,7 @@ const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"
 let easyMode = words.easy
 let mediumMode = words.medium
 let hardMode = words.hard
-let randomWord;
+let randomWord = ""
 
 function renderKeyboard() {
     let keys = ""
@@ -20,21 +20,26 @@ return keys
 }
 let wordPlaceholderArr;
 function fillArrPlaceholder(mode) {
-    let randomWordIndex = Math.floor(Math.random() * mode.length)
+
 //let randomWord = foods[randomWordIndex]*/
 
 wordPlaceholderArr= new Array(randomWord.length)
 wordPlaceholderArr.fill(`_`)
     return wordPlaceholderArr
 }
-
+let randomWordIndex = ""
 function getRandomWord(mode) {
-    let randomWordIndex = Math.floor(Math.random() * mode.length)
+    randomWordIndex = Math.floor(Math.random() * mode.length)
     randomWord = mode[randomWordIndex]
-    console.log(randomWord.trim())
     randomWord = randomWord.replaceAll(' ', '');
+
+    
     return randomWord
 }
+function updateArr(mode) {
+    return mode.splice(randomWordIndex,1)
+}
+
 //console.log(foods[randomWordIndex])
 function updateWord() {
 let loopPlaceholder = ""
@@ -74,17 +79,6 @@ function renderKeys(letter) {
     return `<button class=key-btn>${letter}</button>`
 }
 let clickedKeysArr = []
-getAll(".key-btn").forEach(key => key.addEventListener("click",(e) => {
-    console.log("OI")
-    if(!clickedKeysArr.includes(e.target)) {
-        console.log()
-    wordIncludesLetterCheck(e)
-    clickedKeysArr.push(e.target)
-
-    }
-    console.log(clickedKeysArr)
-
-}))
 
 function wordIncludesLetterCheck(e) {
     if(randomWord.includes(e.target.textContent)) {
@@ -131,7 +125,6 @@ document.body.addEventListener("click", (e) => {
     }
     else if(e.target.className == "key-btn") {
         if(!clickedKeysArr.includes(e.target.textContent)) {
-            console.log()
         wordIncludesLetterCheck(e)
         clickedKeysArr.push(e.target.textContent)
         e.target.disabled = true
@@ -140,29 +133,59 @@ document.body.addEventListener("click", (e) => {
     }  
 })
 function resetGame(mode) {
+    updateArr(mode)
     getRandomWord(mode)
     fillArrPlaceholder(mode)
+    clickedKeysArr.length = 0
+    
+    console.log(mode)
+    console.log(randomWord)
 }
 function checkWin() {
     if(!wordPlaceholderArr.includes("_")) {
         setTimeout(() => {
             resetKeyboard()
-            clickedKeysArr.length = 0
+            //clickedKeysArr.length = 0
+            resetGame(currentMode)
+            get(".word").innerHTML = updateWord()
+           // get(".word").innerHTML = updateWord()
+        },1000)
+    }
+    else {
+       
+        revealWord()
+    }
+}
+
+function resetKeyboard() {
+    getAll(".key-btn").forEach(key => key.disabled = false)
+}
+function revealWord() {
+    let count = 0
+    clickedKeysArr.map(letter => {
+        if(!randomWord.includes(letter)) {
+            count++
+        }
+    })
+    if(count > 5 ) {
+        Array.from(randomWord).map((letter,index) => {
+            let check = getLetterIndex(letter)
+            console.log(check)
+            fillWord(check,letter)
+        })
+        get(".word").innerHTML = updateWord()
+        setTimeout(() => {
             resetGame(currentMode)
             get(".word").innerHTML = updateWord()
         },1000)
     }
-}
-function resetKeyboard() {
-    getAll(".key-btn").forEach(key => key.disabled = false)
 }
 document.body.addEventListener("mouseover",async (e) => {
     if(e.target.className == "info-icon") {
         let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
         renderClue(clue)
     }
-   else if(e.target.className !== "info-icon" && get(".info-icon")){
-    
+   else if(e.target.className !== "info-icon" && get(".info-icon")){ 
     get(".clue-container").classList.remove("open")
     get(".clue-container").setAttribute("clue","")
    }

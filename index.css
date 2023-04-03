@@ -99,22 +99,19 @@ button {
    
 }
 .keyboard-container button:nth-child(18) {
-    
-  
+
     background-color: rgb(226, 43, 98); 
 
 }
 .keyboard-container button:nth-child(23) {
-  
-  
     background-color: blueviolet; 
-
 }
 .key-btn {
     width: 110px;
     padding: 1em;
     margin: 5px;
     height: 60px;
+    font-family: 'Orbitron', sans-serif;
 }
 .word-placeholder {
     margin-left:2em;

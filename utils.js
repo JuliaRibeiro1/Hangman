@@ -37,3 +37,4 @@ leftArm()
 rightArm()
 leftLeg()
 rightLeg()
+export {header,body,leftArmm,rightArm,leftLeg,rightLeg}
