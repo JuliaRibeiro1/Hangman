@@ -53,12 +53,19 @@ wordPlaceholderArr.map((letter) => {
 return loopPlaceholder
 }
 let gameHtml = document.createElement("div")
-
+let points = 0
+let winRounds = 0
+let totalRounds = 0
 function renderGame() {
    // console.log(a)
    get(".game-container").removeChild(menuHtml)
      gameHtml.innerHTML = `<div class="clue-container">
     <img class="info-icon" src="images/info-icon.svg"/>
+    </div>
+    <div class="points-container">
+    kkkkkk
+        <div class=round-count-container><span class=win-rounds>${winRounds}</span>/<span class=total-rounds>${totalRounds}</span> word</div>
+        <span class=points><span>${points}</span> points</span>
     </div>
     <div class="hangman">
         <div class="string-container">
@@ -71,7 +78,7 @@ function renderGame() {
     <div class="word">${updateWord()}</div>
     <div class="keyboard-container">${renderKeyboard()}</div>`
     //get(".game-container").innerHTML = gameHtml.innerHTML
-     get(".game-container").append(gameHtml)
+   get(".game-container").append(menuHtml)
 }
 
 function renderKeys(letter) {
@@ -108,19 +115,19 @@ let currentMode;
 document.body.addEventListener("click", (e) => {
     if(e.target.id == "easy-mode-btn") {
         currentMode = easyMode
-        resetGame(currentMode)
+        startGame(currentMode)
         renderGame()
 
     }
     else if(e.target.id == "medium-mode-btn") {
         currentMode = mediumMode
-        resetGame(currentMode)
+        startGame(currentMode)
         renderGame()
 
     }
     else if(e.target.id == "hard-mode-btn") {
         currentMode = hardMode
-        resetGame(currentMode)
+        startGame(currentMode)
         renderGame()
     }
     else if(e.target.className == "key-btn") {
@@ -132,27 +139,27 @@ document.body.addEventListener("click", (e) => {
         } 
     }  
 })
-function resetGame(mode) {
+function startGame(mode) {
     updateArr(mode)
     getRandomWord(mode)
     fillArrPlaceholder(mode)
-    clickedKeysArr.length = 0
-    
     console.log(mode)
     console.log(randomWord)
 }
+function resetGame(mode) {
+    resetKeyboard()
+    clickedKeysArr.length = 0
+    startGame(mode)
+    get(".word").innerHTML = updateWord()
+}
+
 function checkWin() {
     if(!wordPlaceholderArr.includes("_")) {
-        setTimeout(() => {
-            resetKeyboard()
-            //clickedKeysArr.length = 0
+        setTimeout(() => {  
             resetGame(currentMode)
-            get(".word").innerHTML = updateWord()
-           // get(".word").innerHTML = updateWord()
         },1000)
     }
     else {
-       
         revealWord()
     }
 }
@@ -160,23 +167,27 @@ function checkWin() {
 function resetKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = false)
 }
-function revealWord() {
+function CheckWrongLetterCounter() {
     let count = 0
     clickedKeysArr.map(letter => {
         if(!randomWord.includes(letter)) {
             count++
         }
     })
-    if(count > 5 ) {
+    return count
+}
+function revealWord() {
+    
+    if(CheckWrongLetterCounter() > 5 ) {
         Array.from(randomWord).map((letter,index) => {
             let check = getLetterIndex(letter)
             console.log(check)
             fillWord(check,letter)
         })
+        console.log("perdeu")
         get(".word").innerHTML = updateWord()
         setTimeout(() => {
             resetGame(currentMode)
-            get(".word").innerHTML = updateWord()
         },1000)
     }
 }
