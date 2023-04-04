@@ -33,7 +33,6 @@ function getRandomWord(mode) {
     randomWord = mode[randomWordIndex]
     randomWord = randomWord.replaceAll(' ', '');
 
-    
     return randomWord
 }
 function updateArr(mode) {
@@ -158,6 +157,7 @@ function resetGame(mode) {
 }
 
 function checkWin() {
+    console.log(clickedKeysArr.includes(randomWord))
     if(!wordPlaceholderArr.includes("_")) {
         setTimeout(() => {  
             
@@ -180,13 +180,19 @@ function updatePoints() {
 
 }
 function updateRounds() {
-    if(checkWin) {
+    if(CheckWrongLetterCounter() < 5 ) {
         winRounds+=1
         get(".win-rounds").textContent = winRounds
     }
    totalRounds+=1
+   checkNextPhase()
    get(".total-rounds").textContent = totalRounds
 
+}
+function checkNextPhase() {
+    if(winRounds < totalRounds + 2) {
+        console.log("lose")
+    }
 }
 function resetKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = false)
@@ -209,6 +215,7 @@ function revealWord() {
             fillWord(check,letter)
         })
         console.log("perdeu")
+        console.log(wordPlaceholderArr)
         get(".word").innerHTML = updateWord()
         setTimeout(() => {
             resetGame(currentMode)
