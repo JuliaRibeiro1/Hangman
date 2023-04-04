@@ -59,13 +59,16 @@ let totalRounds = 0
 function renderGame() {
    // console.log(a)
    get(".game-container").removeChild(menuHtml)
-     gameHtml.innerHTML = `<div class="clue-container">
+   
+     gameHtml.innerHTML = `
+     <div class="top-container">
+     <div class="clue-container">
     <img class="info-icon" src="images/info-icon.svg"/>
     </div>
     <div class="points-container">
-    kkkkkk
         <div class=round-count-container><span class=win-rounds>${winRounds}</span>/<span class=total-rounds>${totalRounds}</span> word</div>
         <span class=points><span>${points}</span> points</span>
+    </div>
     </div>
     <div class="hangman">
         <div class="string-container">
@@ -77,8 +80,8 @@ function renderGame() {
     </div>
     <div class="word">${updateWord()}</div>
     <div class="keyboard-container">${renderKeyboard()}</div>`
-    //get(".game-container").innerHTML = gameHtml.innerHTML
-   get(".game-container").append(menuHtml)
+  
+   get(".game-container").append(gameHtml)
 }
 
 function renderKeys(letter) {
@@ -147,6 +150,7 @@ function startGame(mode) {
     console.log(randomWord)
 }
 function resetGame(mode) {
+    updateRounds()
     resetKeyboard()
     clickedKeysArr.length = 0
     startGame(mode)
@@ -156,6 +160,9 @@ function resetGame(mode) {
 function checkWin() {
     if(!wordPlaceholderArr.includes("_")) {
         setTimeout(() => {  
+            
+            updatePoints()
+            
             resetGame(currentMode)
         },1000)
     }
@@ -163,7 +170,24 @@ function checkWin() {
         revealWord()
     }
 }
+function updatePoints() {
+    points+=10
+    get(".points").classList.add("addPointsAnimation")
+    setTimeout(() => {
+        get(".points").classList.remove("addPointsAnimation")
+    },400)
+    return get(".points span").textContent = points
 
+}
+function updateRounds() {
+    if(checkWin) {
+        winRounds+=1
+        get(".win-rounds").textContent = winRounds
+    }
+   totalRounds+=1
+   get(".total-rounds").textContent = totalRounds
+
+}
 function resetKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = false)
 }
