@@ -1,4 +1,4 @@
-import {foods,words} from "./wordsData.js"
+import {words} from "./wordsData.js"
 
 
 const get = element => document.querySelector(element)
@@ -51,14 +51,15 @@ wordPlaceholderArr.map((letter) => {
 //wordPlaceholderArr.fill(loopPlaceholder)
 return loopPlaceholder
 }
-let gameHtml = document.createElement("div")
+let gameHtml = ""
 let points = 0
 let winRounds = 0
 let totalRounds = 0
 function renderGame() {
    // console.log(a)
-   get(".game-container").removeChild(menuHtml)
-   
+   get(".container").removeChild(menuHtml)
+   gameHtml = document.createElement("div")
+   gameHtml.className = "game-container"
      gameHtml.innerHTML = `
      <div class="top-container">
      <div class="clue-container">
@@ -80,7 +81,7 @@ function renderGame() {
     <div class="word">${updateWord()}</div>
     <div class="keyboard-container">${renderKeyboard()}</div>`
   
-   get(".game-container").append(gameHtml)
+   get(".container").append(gameHtml)
 }
 
 function renderKeys(letter) {
@@ -115,6 +116,9 @@ function getLetterIndex(letter) {
 }
 let currentMode;
 document.body.addEventListener("click", (e) => {
+    console.log(e.target.className)
+    let child = get(".container").children[0]
+            let child2 = get(".container").children[1]
     if(e.target.id == "easy-mode-btn") {
         currentMode = easyMode
         startGame(currentMode)
@@ -140,7 +144,33 @@ document.body.addEventListener("click", (e) => {
        checkWin()
         } 
     }  
+    else if(e.target.className == "menu-btn") {
+        if(gameHtml !== "") {
+            
+            console.log(get(".container").children)
+            get(".container").removeChild(child)
+            get(".container").removeChild(child2)
+            }
+            cleanScore()
+        renderMenu()
+
+    }
+    else if(e.target.className == "start-again-btn") {
+        console.log(child2)
+        child2 = get(".container").children[1]
+        console.log(child2)
+        cleanScore()
+        resetGame(currentMode)
+        get(".container").removeChild(popup)
+        console.log( get(".container").children)
+      // 
+    }
 })
+function cleanScore() {
+    points = 0
+    winRounds = 0
+    totalRounds = 0
+}
 function startGame(mode) {
     updateArr(mode)
     getRandomWord(mode)
@@ -154,20 +184,22 @@ function resetGame(mode) {
     clickedKeysArr.length = 0
     startGame(mode)
     get(".word").innerHTML = updateWord()
+    
 }
 
 function checkWin() {
-    console.log(clickedKeysArr.includes(randomWord))
     if(!wordPlaceholderArr.includes("_")) {
         setTimeout(() => {  
-            
+           
             updatePoints()
-            
+            console.log("Oaaaaaaaaaa")
             resetGame(currentMode)
         },1000)
     }
     else {
-        revealWord()
+        if(CheckWrongLetterCounter() > 5 ) {
+            revealWord()
+        }
     }
 }
 function updatePoints() {
@@ -180,19 +212,41 @@ function updatePoints() {
 
 }
 function updateRounds() {
+    console.log(CheckWrongLetterCounter())
+    checkNextPhase()
     if(CheckWrongLetterCounter() < 5 ) {
         winRounds+=1
         get(".win-rounds").textContent = winRounds
     }
    totalRounds+=1
-   checkNextPhase()
+   
    get(".total-rounds").textContent = totalRounds
 
 }
 function checkNextPhase() {
-    if(winRounds < totalRounds + 2) {
-        console.log("lose")
+    if(totalRounds == winRounds  + 3) {
+        renderLoseMenu()
+        return true
     }
+    else {
+        return false
+    }
+
+
+}
+let popup = ""
+function renderLoseMenu() {
+    popup = document.createElement("div")
+popup.className = "lose-popup-container"
+    popup.innerHTML = `
+    <div class="lose-popup-container">
+        <div class="popup-container">
+        <h2>YOU LOSE</h2>
+        <button class="menu-btn">MENU</button>
+        <button class="start-again-btn">START AGAIN</button>
+        </div>
+    </div>`
+    return get(".container").append(popup)
 }
 function resetKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = false)
@@ -207,19 +261,23 @@ function CheckWrongLetterCounter() {
     return count
 }
 function revealWord() {
-    
-    if(CheckWrongLetterCounter() > 5 ) {
+   // if(CheckWrongLetterCounter() > 5 ) {
+       
         Array.from(randomWord).map((letter,index) => {
             let check = getLetterIndex(letter)
-            console.log(check)
+
             fillWord(check,letter)
         })
-        console.log("perdeu")
-        console.log(wordPlaceholderArr)
+
         get(".word").innerHTML = updateWord()
+        console.log(checkNextPhase())
+        if(checkNextPhase() == false) {
+            console.log(checkNextPhase())
         setTimeout(() => {
+            console.log("reveal")
             resetGame(currentMode)
         },1000)
+    //}
     }
 }
 document.body.addEventListener("mouseover",async (e) => {
@@ -238,6 +296,8 @@ getAll(".menu-option-btn").forEach(btn => btn.addEventListener("click",() => {
 }))
 let menuHtml = document.createElement("div")
 function renderMenu() {
+    console.log(get(".container").children)
+  
      menuHtml.innerHTML = `<div class=menu-container>
         <h1>hangman</h1>
         <div class=menu-options-container>
@@ -247,7 +307,8 @@ function renderMenu() {
         </div>
     </div>`
     console.log(menuHtml)
-    get(".game-container").append(menuHtml)
+    get(".container").append(menuHtml)
+   
 }
 renderMenu()
 function renderClue(clue) {
