@@ -12,17 +12,19 @@
 }
 .clue-container,.points-container{
     position: absolute;
-    margin-top: 1em;
+    
 }
 .top-container {
     display: flex;
     position: relative;
-    width: 100vw;
+    width: 95vw;
+    background-color: #029980;
+    top:-15%;
 }
 .clue-container {
     right: 90%;
    
-    margin-right: 1em;
+  
 }
 .points-container {
     z-index: -1;
@@ -38,7 +40,7 @@
     content: attr(clue);
     transform: translate(-50%,0%);
     left:50%;
-    top:115%;
+    top:100%;
     width: 100%;
     min-width: 150px;
     max-width: 250px;
@@ -46,42 +48,57 @@
     padding: 1em;
     height: auto;
     margin: .3em;
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.438);
-    background-color: rgb(19, 21, 22);
+    color:rgb(240, 240, 240);
+    box-shadow: 0px 5px 5px rgb(58, 58, 58);;
+    background-color: rgb(58, 58, 58);;
 }
 .clue-container:before {
     content: "";
     display: block;
-    border:10px solid #000;
+    border:10px solid rgb(58, 58, 58);;
     height: 10%;
-    bottom:-35%;
-    
+    bottom:-20%;
     transform: translate(-25%,0%);
     left:25%;
     transform: rotate(90deg);
-    border-color: transparent rgb(19, 21, 22) transparent transparent;
+    border-color: transparent rgb(58, 58, 58) transparent transparent ;
 }
 .clue-container:before,.clue-container:after {
     position: absolute;
     display: none
 }
-.flex {
+
+body {
+    background-color: #e5e5f7ea;
+    background-image:  linear-gradient(#696b8d5d 1.3px, transparent 1.3px), linear-gradient(to right, #696b8d62 1.3px, #e6e6e9c5 1.3px);
+    background-size: 46px 46px;;
+   /* background-color: rgb(37, 38, 41);*/
+    width: 100vw;
+    height: 100vh;
+    color:rgb(58, 58, 58);
+    font-family: 'Short Stack', cursive, sans-serif;
+  
+}
+.container ,.bottom-container {
+    height: 100%;
+    width: 100%;
     display:flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+   
 }
-body {
-    background-color: rgb(37, 38, 41);
-    color:white;
-    width: 95vw;
-    font-family: 'Orbitron', sans-serif;
-  
+
+.bottom-container {
+  position: relative;
+  bottom:-18%;
+  gap:2em;
+
 }
 .game-container{
-  width: 90vw;
+    width: 90vw;
     margin: 0 auto;
-flex-direction: column;
+    flex-direction: column;
     justify-content: center;
     display: flex;
     align-items: center;
@@ -93,11 +110,9 @@ flex-direction: column;
 }
 button {
     padding: 1em;
-    border: 0;  
+    border: 0; 
 }
-
 .keyboard-container {
-    margin-top:7em;
     display: flex;
     flex-wrap: wrap;
     width: 60%;
@@ -132,23 +147,29 @@ button {
     width: 110px;
     padding: 1em;
     margin: 5px;
+    font-size: 1.5rem;
     height: 60px;
-    font-family: 'Orbitron', sans-serif;
+    color:rgb(58, 58, 58);
+    background: transparent;
+    font-family: 'Short Stack', cursive; 
 }
 .word-placeholder {
     margin-left:2em;
     position: relative;
     text-align: center;
+    font-size: 1.5rem;
+   
 
 }
 .word-placeholder:after {
     content: "";
     position: absolute;
     width: 1.5em;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(58, 58, 58);
     height: 5px;
-    top:90%;
+    top:83%;
     left:-50%;
+   
     z-index: 2;
     opacity: 1;
     border-radius: 1em;
@@ -159,10 +180,10 @@ button {
     align-items: center;
     justify-content: center;*/
     position: absolute;
-    margin-top: -3%;
-  
-    bottom: 80%;
-    ;
+    
+    bottom: 75%;
+    transform: translate(50%,10%);
+    
 
 }
 .head-container {
@@ -170,9 +191,25 @@ button {
     display: flex;
     justify-content: center;
     margin-top: 0;*/
+    top:-10%;
+
+    transform: translate(-35%,10%);
+    position: absolute;
 }
 .head {
-    margin-top: -58px;
+    fill: #1b1b1b;
+}
+.head,.body,.left-arm,.right-arm,.left-leg,.right-leg {
+    fill:rgb(58, 58, 58);
+    stroke:rgb(58, 58, 58)
+}
+.string {
+    fill: rgb(58, 58, 58)
+}
+.head {
+    z-index: 3;
+   
+    margin-top: 100px;
     stroke-width:5;
     margin-bottom: 0;
     stroke-dasharray:471;
@@ -183,11 +220,13 @@ button {
 }
 .string-container {
     
+    
 }
 .body-container {
     height: 190px;
-    top:43%;
+    top:35%;
     position: absolute;
+    transform: translate(-35%,10%);
    
 
 }
@@ -195,40 +234,54 @@ button {
     transform: rotate(25deg);
     /*margin-top: -320px;*/
     stroke-width:5;
-   top:50%;
+   top:75%;
     position: absolute;
+    transform: translate(-35%,10%);
+    
 }
 .left-arm {
-  /*  animation: leftArmAnimation 2s ;*/
+    animation: armAnimation 2s ;
 }
 .right-arm-container {
     transform: rotate(-25deg);
-    top:50%;
+    top:75%;
     stroke-width:5;
     position: absolute;
    /* margin-top: -152px;*/
 
 }
+.right-arm {
+    animation: armAnimation 2s ;
+}
 .left-leg-container {
     stroke-width: 5;
-    transform: rotate(25deg);
-    margin-top: -15%;
-    top:100%;
+    transform: rotate(15deg);
     stroke-width:5;
+    position: relative;
+
+}
+.left-leg {
     position: absolute;
+    left:13%;  
+   
 }
 .right-leg-container {
     stroke-width: 5;
+    stroke: aquamarine;
     transform: rotate(-25deg);
-    margin-top: -15%;
-    top:100%;
+    top:10%;
     stroke-width:5;
+    position: relative;
+}
+.right-leg {
     position: absolute;
+    left:-14%;  
+   
 }
 .body {
     stroke-width:5;
     transform: rotate(360deg);
-   animation: bodyAnimation 2s ease-in;
+    animation: bodyAnimation 2s ease-in backwards ;
  
 }
 .open:before,.open:after {
@@ -247,8 +300,9 @@ button {
 }
 .menu-container h1 {
     margin-bottom: 1.6em;
-    font-size: 2.8rem;
+    font-size: 3.5rem;
     font-weight: 300;
+    color:black
 }
 .menu-option-btn{
     text-transform: uppercase;
@@ -260,8 +314,9 @@ button {
     padding: 1.2em 3em;
     font-size: 1.2rem;
     border-radius: 20%/60%;
-    box-shadow: 0 5px 15px #00000075;
+    box-shadow: 0 5px 15px #0000003f;
 }
+
 .menu-option-btn:hover {
     transform: scale(1.2);
 }
@@ -284,8 +339,6 @@ button {
 }
 .popup-container h2{
    margin-bottom: 1em;
-   
-
 }
 .popup-container button {
    margin-bottom: 1em;
@@ -298,6 +351,7 @@ button {
     background-color: #1b1b1b;
     color: rgb(238, 238, 238);
 }
+
 @keyframes headAnimation {
     to {
        
@@ -315,12 +369,12 @@ button {
         height: 120px;
       }
 }
-@keyframes leftArmAnimation {
-    from {
-        height: 0;
+@keyframes armAnimation {
+      from {
+        transform: scaleY(0);
       }
       to {
-        height: 90px;
+       transform: scaleY(1);
       }
 }
 

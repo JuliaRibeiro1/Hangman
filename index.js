@@ -1,8 +1,9 @@
 import {words} from "./wordsData.js"
-
+import {head,body,leftArm,rightArm,leftLeg,rightLeg} from "./utils.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
+const hangmanBody = [head,body,leftArm,rightArm,leftLeg,rightLeg]
 
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let easyMode = words.easy
@@ -55,21 +56,14 @@ let gameHtml = document.createElement("div")
 let points = 0
 let winRounds = 0
 let totalRounds = 0
+cleanScore()
 function renderGame() {
    // console.log(a)
    get(".container").removeChild(menuHtml)
    
    gameHtml.className = "game-container"
      gameHtml.innerHTML = `
-     <div class="top-container">
-     <div class="clue-container">
-    <img class="info-icon" src="images/info-icon.svg"/>
-    </div>
-    <div class="points-container">
-        <div class=round-count-container><span class=win-rounds>${winRounds}</span>/<span class=total-rounds>${totalRounds}</span> word</div>
-        <span class=points><span>${points}</span> points</span>
-    </div>
-    </div>
+    
     <div class="hangman">
         <div class="string-container">
             <svg class="string">
@@ -78,8 +72,10 @@ function renderGame() {
             </svg>
         </div>
     </div>
+    <div class=bottom-container flex>
     <div class="word">${updateWord()}</div>
-    <div class="keyboard-container">${renderKeyboard()}</div>`
+    <div class="keyboard-container">${renderKeyboard()}</div>
+    </div>`
   
    get(".container").append(gameHtml)
 }
@@ -138,7 +134,7 @@ document.body.addEventListener("click", (e) => {
         wordIncludesLetterCheck(e)
         clickedKeysArr.push(e.target.textContent)
         e.target.disabled = true
-       checkWin()
+        checkWin()
         } 
     }  
     else if(e.target.className == "menu-btn") {
@@ -153,7 +149,7 @@ document.body.addEventListener("click", (e) => {
 
     }
     else if(e.target.className == "start-again-btn") {
-        console.log(child2)
+       
         child2 = get(".container").children[1]
         console.log(child2)
        
@@ -181,18 +177,16 @@ function startGame(mode) {
     console.log(randomWord)
 }
 function resetGame(mode) {
-    
-    
-    resetKeyboard()
     clickedKeysArr.length = 0
     startGame(mode)
     get(".word").innerHTML = updateWord()
-    
+    resetKeyboard()
 }
 
 function checkWin() {
 
     if(!wordPlaceholderArr.includes("_")) {
+        disableKeyboard()
         setTimeout(() => {  
            
             updatePoints()
@@ -205,12 +199,13 @@ function checkWin() {
     else {
         if(CheckWrongLetterCounter() > 5 ) {
             updateRounds()
+            disableKeyboard()
             revealWord()
             
         }
-    }
-   
+    } 
 }
+
 function updatePoints() {
     points+=10
     get(".points").classList.add("addPointsAnimation")
@@ -220,6 +215,7 @@ function updatePoints() {
     return get(".points span").textContent = points
 
 }
+
 function updateRounds() {
    // console.log(CheckWrongLetterCounter())
    // checkNextPhase()//CheckWrongLetterCounter() < 5
@@ -242,31 +238,38 @@ function checkNextPhase() {
     else {
         return false
     }
-
 }
-let popupNextPhase = document.createElement("div")
-popupNextPhase.className = "lose-popup-container"
+
 function renderNextPhase() {
-    console.log(totalRounds)
+    
+  
     let NextMode = currentMode == easyMode? mediumMode : currentMode == mediumMode ? hardMode : winnerAllModes()
-    if(checkNextPhase() == false && totalRounds > 2) {
-        nextPhaseMessage()
-        console.log(NextMode)
-        resetGame(mediumMode)
-        popupNextPhase.innerHTML = `
-        <div class="lose-popup-container">
+    let round = totalRounds == 5 || totalRounds == 10 || totalRounds == 15
+    if(checkNextPhase() == false && round) {
+      currentMode = NextMode
+        resetGame(NextMode)
+      
+    popupLose.innerHTML = `
+    <div class="lose-popup-container">
         <div class="popup-container">
-        <h2>Next phase</h2>
+        <h2>NEXT PHASE</h2>
         
+        </div>
     </div>`
-    get(".container").append(popupNextPhase)
-    setTimeout(() => {
-        get(".container").remove(popupNextPhase)
-    },1000)
+    return get(".container").append(popupLose)
+   
     }
 }
 
 function winnerAllModes() {
+    popupLose.innerHTML = `
+    <div class="lose-popup-container">
+        <div class="popup-container">
+        <h2>WINNER</h2>
+        
+        </div>
+    </div>`
+    return get(".container").append(popupLose)
 
 }
 function nextPhaseMessage() {
@@ -291,16 +294,23 @@ popupLose.className = "lose-popup-container"
 function resetKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = false)
 }
+function disableKeyboard() {
+    getAll(".key-btn").forEach(key => key.disabled = true)
+}
+
 function CheckWrongLetterCounter() {
     let count = 0
     clickedKeysArr.map(letter => {
         if(!randomWord.includes(letter)) {
+            hangmanBody[count]()
             count++
         }
     })
     return count
 }
+let c = 0
 function revealWord() {
+   
    // if(CheckWrongLetterCounter() > 5 ) {
         Array.from(randomWord).map((letter,index) => {
             let check = getLetterIndex(letter)
@@ -309,6 +319,9 @@ function revealWord() {
 
         get(".word").innerHTML = updateWord()
         console.log(checkNextPhase())
+        
+        c++
+        console.log(get(".hangman"))
         if(checkNextPhase() == false) {
             console.log(checkNextPhase())
         setTimeout(() => {
