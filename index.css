@@ -119,7 +119,8 @@ button {
     min-width: 300px;
     justify-content: center;
     align-items: center;
-    margin-left: 5px;
+    margin-left: 0px;
+    gap: 0.5em;
 
 }
 .keyboard-container button:nth-child(9) {
@@ -175,120 +176,138 @@ button {
     border-radius: 1em;
 }
 .hangman {
-   /* display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;*/
     position: absolute;
+    justify-content: start;
     
-    bottom: 75%;
-    transform: translate(50%,10%);
-    
+    width: 50vw;
+    position: absolute;
+    top:0%;
+    gap:0;
+   
 
 }
-.head-container {
-   /* width: 100wv;
-    display: flex;
-    justify-content: center;
-    margin-top: 0;*/
-    top:-10%;
 
-    transform: translate(-35%,10%);
-    position: absolute;
+.head-container { 
+   
+    z-index: 2;
+
+  
+   display: flex;
+  justify-content: center;
+margin-top: -50px;
+   align-items: start;
+  
 }
 .head {
     fill: #1b1b1b;
 }
 .head,.body,.left-arm,.right-arm,.left-leg,.right-leg {
     fill:rgb(58, 58, 58);
-    stroke:rgb(58, 58, 58)
-}
-.string {
-    fill: rgb(58, 58, 58)
-}
-.head {
-    z-index: 3;
+    stroke:rgb(58, 58, 58);
    
-    margin-top: 100px;
+
+}
+
+.head {
+  
+    z-index: 3;
+   /* transform: rotate(-90deg);*/
+    height: 100px;
     stroke-width:5;
     margin-bottom: 0;
     stroke-dasharray:471;
     stroke-dashoffset: 471;
-    transform: rotate(-90deg);
-    transform-origin: center;
-    animation: 1s headAnimation ease-in forwards;
-}
-.string-container {
-    
-    
-}
-.body-container {
-    height: 190px;
-    top:35%;
-    position: absolute;
-    transform: translate(-35%,10%);
    
+    transform-origin: center;
+    animation: .5s headAnimation ease-in forwards;
+    animation-iteration-count: 1
+}
+  
+.body-container {
+    height: 100px;
+    top:100px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
 
 }
 .left-arm-container {
-    transform: rotate(25deg);
     /*margin-top: -320px;*/
     stroke-width:5;
-   top:75%;
-    position: absolute;
-    transform: translate(-35%,10%);
+    display: flex;
+    justify-content: center;
+    transform: rotate(25deg);
+    margin-top: -15px;
+   
     
 }
 .left-arm {
-    animation: armAnimation 2s ;
+   
+    animation: armAnimation .5s ;
+    animation-iteration-count: 1
+   
+    /* animation: armAnimation 2s ;*/
 }
 .right-arm-container {
+    transform: scaleY(1);
     transform: rotate(-25deg);
-    top:75%;
     stroke-width:5;
-    position: absolute;
-   /* margin-top: -152px;*/
+    margin-top: -15px;
 
 }
 .right-arm {
-    animation: armAnimation 2s ;
+    margin-top: -130px;
+    margin-left: 50px;
+    animation: armAnimation .5s ease-in forwards;
+    animation-iteration-count: 1
+    
 }
 .left-leg-container {
     stroke-width: 5;
     transform: rotate(15deg);
     stroke-width:5;
-    position: relative;
-
+   
+    margin-top: -110px;
+    margin-left: 30px;
+    
+  
 }
 .left-leg {
-    position: absolute;
-    left:13%;  
+    animation: armAnimation .5s forwards;
+    
    
 }
 .right-leg-container {
     stroke-width: 5;
-    stroke: aquamarine;
-    transform: rotate(-25deg);
-    top:10%;
+    transform: rotate(-15deg);
+    margin-top: -155px;
+    margin-left: -40px;
     stroke-width:5;
-    position: relative;
+    
+   
 }
 .right-leg {
-    position: absolute;
-    left:-14%;  
+    animation: armAnimation .5s ease-in forwards;
    
 }
 .body {
     stroke-width:5;
     transform: rotate(360deg);
-    animation: bodyAnimation 2s ease-in backwards ;
+    height: 80px;
+    animation: bodyAnimation .5s  ;
+    animation-iteration-count: 1
  
 }
 .open:before,.open:after {
     display: block;
 }
 /*MENU */
-.menu-container {
+
+.menu{
+    z-index: 400;
     width: 100%;
     height: 100vh;
     display: flex;
@@ -320,7 +339,7 @@ button {
 .menu-option-btn:hover {
     transform: scale(1.2);
 }
-.lose-popup-container {
+.popup-container {
     z-index: 2;
     width: 30%;
     height: 35%;
@@ -328,23 +347,29 @@ button {
     position: absolute;
     left:50%;
     padding: 1.5em;
-    color: red;
     gap: 1em;
+    border: rgb(95, 95, 95) .3em solid;
     font-size: 1.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: translate(-50%,50%);
-    background-color: rgb(61, 61, 61);
+    transform: translate(-50%,5%);
+    background-color: #efeff3;
 }
-.popup-container h2{
+   
+.popup {
    margin-bottom: 1em;
+   font-size: 2.5rem;
+   color:#029980;
+   margin-top: 1em;
 }
 .popup-container button {
+
    margin-bottom: 1em;
     border: 0;
     margin: 0 auto;
-    width: 100%;
+    width: 50%;
+    margin-top: 1.5em;
     margin-bottom: 1em;
     display: block;
     padding: 1.3em;
@@ -366,7 +391,7 @@ button {
       }
       to {
         
-        height: 120px;
+        height: 80px;
       }
 }
 @keyframes armAnimation {
@@ -411,4 +436,7 @@ button {
 
 .addPointsAnimation {
     animation: addPoints .5s ease-in;
+}
+.removeAnimation {
+    animation-play-state: paused;
 }

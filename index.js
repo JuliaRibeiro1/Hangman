@@ -4,7 +4,7 @@ import {head,body,leftArm,rightArm,leftLeg,rightLeg} from "./utils.js"
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
 const hangmanBody = [head,body,leftArm,rightArm,leftLeg,rightLeg]
-
+console.log("Oi")
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let easyMode = words.easy
 let mediumMode = words.medium
@@ -64,14 +64,7 @@ function renderGame() {
    gameHtml.className = "game-container"
      gameHtml.innerHTML = `
     
-    <div class="hangman">
-        <div class="string-container">
-            <svg class="string">
-                <rect x="50%" y="0" width="5" height="50"
-                style="fill:rgb(255, 255, 255);" />
-            </svg>
-        </div>
-    </div>
+   
     <div class=bottom-container flex>
     <div class="word">${updateWord()}</div>
     <div class="keyboard-container">${renderKeyboard()}</div>
@@ -84,14 +77,36 @@ function renderKeys(letter) {
 
     return `<button class=key-btn>${letter}</button>`
 }
+let arr = ["head","body","left-arm","right-arm","left-leg","right-leg"]
 let clickedKeysArr = []
-
+let wrongClickedKeysArr = []
 function wordIncludesLetterCheck(e) {
     if(randomWord.includes(e.target.textContent)) {
         let check = getLetterIndex(e.target.textContent)
         return fillWord(check,e.target.textContent)
   
+}
+else {
+    let len = wrongClickedKeysArr.length 
+    let le = len - 1
+    console.log(le)
+  
+    wrongClickedKeysArr.push(e.target.textContent)
+
+    hangmanBody[len]()
+    if(len !== 0) {
+    setTimeout(() => {
+        
+        
+       
+        console.log(arr[len])
+    
+    },700)
+}
+  
+  
 }}
+
 function fillWord(check,letter) {
     check.map(item => {
         wordPlaceholderArr[item] = letter
@@ -112,17 +127,16 @@ function getLetterIndex(letter) {
 }
 let currentMode;
 document.body.addEventListener("click", (e) => {
+    console.log(e.target.id)
     if(e.target.id == "easy-mode-btn") {
         currentMode = easyMode
         startGame(currentMode)
         renderGame()
-
     }
     else if(e.target.id == "medium-mode-btn") {
         currentMode = mediumMode
         startGame(currentMode)
         renderGame()
-
     }
     else if(e.target.id == "hard-mode-btn") {
         currentMode = hardMode
@@ -134,28 +148,27 @@ document.body.addEventListener("click", (e) => {
         wordIncludesLetterCheck(e)
         clickedKeysArr.push(e.target.textContent)
         e.target.disabled = true
+       
         checkWin()
         } 
     }  
     else if(e.target.className == "menu-btn") {
-        if(gameHtml !== "") {
-            
+        //if(gameHtml !== "") {
             console.log(get(".container").children)
-            get(".container").removeChild(popupLose)
+            get(".container").removeChild(popupHtml)
             get(".container").removeChild(gameHtml)
-            }
+          // }
             cleanScore()
         renderMenu()
+        get(".hangman").innerHTML = `<img src="images/icons8-hang-100.png"/>`
+        startGame(currentMode)
 
     }
     else if(e.target.className == "start-again-btn") {
-       
-        child2 = get(".container").children[1]
-        console.log(child2)
-       
+
         resetGame(currentMode)
         cleanScore()
-        get(".container").removeChild(popupLose)
+        get(".container").removeChild(popupHtml)
         console.log( get(".container").children)
       // 
     }
@@ -173,18 +186,19 @@ function startGame(mode) {
     updateArr(mode)
     getRandomWord(mode)
     fillArrPlaceholder(mode)
-    
+    wrongClickedKeysArr.length = 0
     console.log(randomWord)
 }
 function resetGame(mode) {
     clickedKeysArr.length = 0
     startGame(mode)
     get(".word").innerHTML = updateWord()
+    get(".hangman").innerHTML = `<img src="images/icons8-hang-100.png"/>`
     resetKeyboard()
 }
 
 function checkWin() {
-
+console.log(wrongClickedKeysArr)
     if(!wordPlaceholderArr.includes("_")) {
         disableKeyboard()
         setTimeout(() => {  
@@ -217,9 +231,7 @@ function updatePoints() {
 }
 
 function updateRounds() {
-   // console.log(CheckWrongLetterCounter())
-   // checkNextPhase()//CheckWrongLetterCounter() < 5
-   
+
     if(CheckWrongLetterCounter() < 5) {
         winRounds+=1
         get(".win-rounds").textContent = winRounds
@@ -249,47 +261,46 @@ function renderNextPhase() {
       currentMode = NextMode
         resetGame(NextMode)
       
-    popupLose.innerHTML = `
-    <div class="lose-popup-container">
-        <div class="popup-container">
+    popupHtml.innerHTML = `
+    <div class="popup">
         <h2>NEXT PHASE</h2>
-        
-        </div>
     </div>`
-    return get(".container").append(popupLose)
+
+    get(".container").append(popupHtml)
+    setTimeout(() => {
+        get(".container").removeChild(popupHtml)
+    },1000)
    
     }
 }
 
 function winnerAllModes() {
-    popupLose.innerHTML = `
+    popupHtml.innerHTML = `
     <div class="lose-popup-container">
         <div class="popup-container">
         <h2>WINNER</h2>
         
         </div>
     </div>`
-    return get(".container").append(popupLose)
+    return get(".container").append(popupHtml)
 
 }
 function nextPhaseMessage() {
 
 }
 
-let popupLose = ""
-popupLose = document.createElement("div")
+let popupHtml = ""
+popupHtml = document.createElement("div")
+popupHtml.className = "popup-container"
 function renderLoseMenu() {
-    
-popupLose.className = "lose-popup-container"
-    popupLose.innerHTML = `
-    <div class="lose-popup-container">
-        <div class="popup-container">
-        <h2>YOU LOSE</h2>
+
+    popupHtml.innerHTML = `
+        <div class="popup">
+        <h2 style="color:red">YOU LOSE</h2>
         <button class="menu-btn">MENU</button>
         <button class="start-again-btn">START AGAIN</button>
-        </div>
-    </div>`
-    return get(".container").append(popupLose)
+        </div>`
+    return get(".container").append(popupHtml)
 }
 function resetKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = false)
@@ -297,21 +308,16 @@ function resetKeyboard() {
 function disableKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = true)
 }
-
+let count = 0
 function CheckWrongLetterCounter() {
-    let count = 0
-    clickedKeysArr.map(letter => {
-        if(!randomWord.includes(letter)) {
-            hangmanBody[count]()
-            count++
-        }
-    })
-    return count
+  //  let wrongLettersArr = []
+    console.log(wrongClickedKeysArr)
+  
+   
+    return wrongClickedKeysArr.length
 }
 let c = 0
 function revealWord() {
-   
-   // if(CheckWrongLetterCounter() > 5 ) {
         Array.from(randomWord).map((letter,index) => {
             let check = getLetterIndex(letter)
             fillWord(check,letter)
@@ -346,18 +352,19 @@ getAll(".menu-option-btn").forEach(btn => btn.addEventListener("click",() => {
     console.log("Oiiii")
 }))
 let menuHtml = document.createElement("div")
+menuHtml.className = "menu-container"
 function renderMenu() {
     console.log(get(".container").children)
-     menuHtml.innerHTML = `<div class=menu-container>
+     menuHtml.innerHTML = `<div class=menu>
         <h1>hangman</h1>
         <div class=menu-options-container>
-            <button class="menu-option-btn" id=easy-mode-btn>Easy</button>
-            <button class="menu-option-btn" id=medium-mode-btn>Medium</button>
-            <button class="menu-option-btn" id=hard-mode-btn>Hard</button>
+            <button class="menu-option-btn" id="easy-mode-btn" >Easy</button>
+            <button class="menu-option-btn" id="medium-mode-btn" >Medium</button>
+            <button class="menu-option-btn" id="hard-mode-btn" >Hard</button>
         </div>
     </div>`
     get(".container").append(menuHtml)
-   
+    
 }
 renderMenu()
 function renderClue(clue) {
