@@ -1,5 +1,5 @@
 import {words} from "./wordsData.js"
-import {head,body,leftArm,rightArm,leftLeg,rightLeg} from "./utils.js"
+import {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText} from "./utils.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
@@ -11,14 +11,7 @@ let mediumMode = words.medium
 let hardMode = words.hard
 let randomWord = ""
 
-function renderKeyboard() {
-    let keys = ""
-alphabetArr.map((letter) => {
-    keys += renderKeys(letter)
 
-})
-return keys
-}
 let wordPlaceholderArr;
 function fillArrPlaceholder(mode) {
 
@@ -39,7 +32,14 @@ function getRandomWord(mode) {
 function updateArr(mode) {
     return mode.splice(randomWordIndex,1)
 }
-
+function renderKeyboard() {
+    let keys = ""
+  alphabetArr.map((letter) => {
+    keys += renderKeys(letter)
+  
+  })
+  return keys
+  }
 //console.log(foods[randomWordIndex])
 function updateWord() {
 let loopPlaceholder = ""
@@ -53,9 +53,7 @@ wordPlaceholderArr.map((letter) => {
 return loopPlaceholder
 }
 let gameHtml = document.createElement("div")
-let points = 0
-let winRounds = 0
-let totalRounds = 0
+let points,winRounds,totalRounds
 cleanScore()
 function renderGame() {
    // console.log(a)
@@ -63,8 +61,6 @@ function renderGame() {
    
    gameHtml.className = "game-container"
      gameHtml.innerHTML = `
-    
-   
     <div class=bottom-container flex>
     <div class="word">${updateWord()}</div>
     <div class="keyboard-container">${renderKeyboard()}</div>
@@ -84,7 +80,6 @@ function wordIncludesLetterCheck(e) {
     if(randomWord.includes(e.target.textContent)) {
         let check = getLetterIndex(e.target.textContent)
         return fillWord(check,e.target.textContent)
-  
 }
 else {
     let len = wrongClickedKeysArr.length 
@@ -96,14 +91,8 @@ else {
     hangmanBody[len]()
     if(len !== 0) {
     setTimeout(() => {
-        
-        
-       
-        console.log(arr[len])
-    
     },700)
 }
-  
   
 }}
 
@@ -231,7 +220,7 @@ function updatePoints() {
 }
 
 function updateRounds() {
-
+    renderNextPhase()
     if(CheckWrongLetterCounter() < 5) {
         winRounds+=1
         get(".win-rounds").textContent = winRounds
@@ -239,7 +228,7 @@ function updateRounds() {
    totalRounds+=1
    
    get(".total-rounds").textContent = totalRounds
-   renderNextPhase()
+   
 
 }
 function checkNextPhase() {
@@ -253,11 +242,15 @@ function checkNextPhase() {
 }
 
 function renderNextPhase() {
-    
-  
-    let NextMode = currentMode == easyMode? mediumMode : currentMode == mediumMode ? hardMode : winnerAllModes()
+    let NextMode = currentMode == easyMode? mediumMode : currentMode == mediumMode ? hardMode : hardMode
     let round = totalRounds == 5 || totalRounds == 10 || totalRounds == 15
+    console.log(NextMode)
     if(checkNextPhase() == false && round) {
+      
+        if(NextMode == hardMode) {
+            winnerAllModes()
+        }
+        else {
       currentMode = NextMode
         resetGame(NextMode)
       
@@ -269,37 +262,25 @@ function renderNextPhase() {
     get(".container").append(popupHtml)
     setTimeout(() => {
         get(".container").removeChild(popupHtml)
-    },1000)
+    },1500)
    
     }
 }
+}
 
 function winnerAllModes() {
-    popupHtml.innerHTML = `
-    <div class="lose-popup-container">
-        <div class="popup-container">
-        <h2>WINNER</h2>
-        
-        </div>
-    </div>`
+    popupHtml.innerHTML = popupWinInnerText()
     return get(".container").append(popupHtml)
 
 }
-function nextPhaseMessage() {
 
-}
 
 let popupHtml = ""
 popupHtml = document.createElement("div")
 popupHtml.className = "popup-container"
 function renderLoseMenu() {
 
-    popupHtml.innerHTML = `
-        <div class="popup">
-        <h2 style="color:red">YOU LOSE</h2>
-        <button class="menu-btn">MENU</button>
-        <button class="start-again-btn">START AGAIN</button>
-        </div>`
+    popupHtml.innerHTML = popupLoseInnerText()
     return get(".container").append(popupHtml)
 }
 function resetKeyboard() {
@@ -308,17 +289,13 @@ function resetKeyboard() {
 function disableKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = true)
 }
-let count = 0
+
 function CheckWrongLetterCounter() {
-  //  let wrongLettersArr = []
-    console.log(wrongClickedKeysArr)
-  
-   
     return wrongClickedKeysArr.length
 }
-let c = 0
+
 function revealWord() {
-        Array.from(randomWord).map((letter,index) => {
+        Array.from(randomWord).map((letter) => {
             let check = getLetterIndex(letter)
             fillWord(check,letter)
         })
@@ -326,14 +303,13 @@ function revealWord() {
         get(".word").innerHTML = updateWord()
         console.log(checkNextPhase())
         
-        c++
         console.log(get(".hangman"))
         if(checkNextPhase() == false) {
             console.log(checkNextPhase())
         setTimeout(() => {
             console.log("reveal")
             resetGame(currentMode)
-        },1000)
+        },2000)
     //}
     }
 }
@@ -354,15 +330,8 @@ getAll(".menu-option-btn").forEach(btn => btn.addEventListener("click",() => {
 let menuHtml = document.createElement("div")
 menuHtml.className = "menu-container"
 function renderMenu() {
-    console.log(get(".container").children)
-     menuHtml.innerHTML = `<div class=menu>
-        <h1>hangman</h1>
-        <div class=menu-options-container>
-            <button class="menu-option-btn" id="easy-mode-btn" >Easy</button>
-            <button class="menu-option-btn" id="medium-mode-btn" >Medium</button>
-            <button class="menu-option-btn" id="hard-mode-btn" >Hard</button>
-        </div>
-    </div>`
+     menuHtml.innerHTML = menuInnerText()
+      
     get(".container").append(menuHtml)
     
 }
@@ -371,18 +340,3 @@ function renderClue(clue) {
     get(".clue-container").classList.add("open")
     get(".clue-container").setAttribute("clue",clue)
 }
-
-async function getWordClue(url,word) {
-    try{
-        const res = await fetch(`${url}${word}`) 
-        
-        if(!res.ok) {
-          throw Error("Cor indisponível")
-        }
-        const data = await res.json()
-  return data[0].meanings[0].definitions[0].definition
-
-}catch(err){alert(err)};
-}
-
-//https://api.dictionaryapi.dev/api/v2/entries/en/

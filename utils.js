@@ -34,5 +34,42 @@ function body() {
   </svg></div>`
 }
 //x1=50% x2=0 width=5 height=110
+async function getWordClue(url,word) {
+  try{
+      const res = await fetch(`${url}${word}`) 
+      
+      if(!res.ok) {
+        throw Error("Cor indisponível")
+      }
+      const data = await res.json()
+return data[0].meanings[0].definitions[0].definition
 
-export {head,body,leftArm,rightArm,leftLeg,rightLeg}
+}catch(err){alert(err)};
+}
+function popupLoseInnerText() {
+  return `
+  <div class="popup">
+  <h2 style="color:red">YOU LOSE</h2>
+  <button class="menu-btn">MENU</button>
+  <button class="start-again-btn">START AGAIN</button>
+  </div>`
+}
+function menuInnerText() {
+  return `<div class=menu>
+  <h1>hangman</h1>
+  <div class=menu-options-container>
+      <button class="menu-option-btn" id="easy-mode-btn" >Easy</button>
+      <button class="menu-option-btn" id="medium-mode-btn" >Medium</button>
+      <button class="menu-option-btn" id="hard-mode-btn" >Hard</button>
+  </div>
+  </div>`
+}
+function popupWinInnerText() {
+  return `
+  <div class="popup">
+  <h2>YOU WIN!</h2>
+  <button class="menu-btn">MENU</button>
+  </div>`
+}
+
+export {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText}
