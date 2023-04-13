@@ -438,5 +438,6 @@ margin-top: -50px;
     animation: addPoints .5s ease-in;
 }
 .removeAnimation {
-    animation-play-state: paused;
+    animation-iteration-count: 1;
+    
 }

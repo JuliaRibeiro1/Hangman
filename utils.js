@@ -71,5 +71,10 @@ function popupWinInnerText() {
   <button class="menu-btn">MENU</button>
   </div>`
 }
+function popupNextPhaseInnerText() {
+  return `  <div class="popup">
+  <h2>NEXT PHASE</h2>
+  </div>`
+}
 
-export {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText}
+export {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText, popupNextPhaseInnerText}

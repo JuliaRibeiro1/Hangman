@@ -1,5 +1,5 @@
 import {words} from "./wordsData.js"
-import {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText} from "./utils.js"
+import {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText,popupNextPhaseInnerText} from "./utils.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
@@ -79,7 +79,9 @@ let wrongClickedKeysArr = []
 function wordIncludesLetterCheck(e) {
     if(randomWord.includes(e.target.textContent)) {
         let check = getLetterIndex(e.target.textContent)
-        return fillWord(check,e.target.textContent)
+         fillWord(check,e.target.textContent)
+         checkWin()
+        
 }
 else {
     let len = wrongClickedKeysArr.length 
@@ -87,10 +89,11 @@ else {
     console.log(le)
   
     wrongClickedKeysArr.push(e.target.textContent)
-
+    checkLose()
     hangmanBody[len]()
     if(len !== 0) {
     setTimeout(() => {
+        get(`.${arr[le]}`).classList.add("removeAnimation")
     },700)
 }
   
@@ -138,7 +141,7 @@ document.body.addEventListener("click", (e) => {
         clickedKeysArr.push(e.target.textContent)
         e.target.disabled = true
        
-        checkWin()
+       // checkWin()
         } 
     }  
     else if(e.target.className == "menu-btn") {
@@ -187,7 +190,6 @@ function resetGame(mode) {
 }
 
 function checkWin() {
-console.log(wrongClickedKeysArr)
     if(!wordPlaceholderArr.includes("_")) {
         disableKeyboard()
         setTimeout(() => {  
@@ -199,14 +201,14 @@ console.log(wrongClickedKeysArr)
           
         },1000)
     }
-    else {
-        if(CheckWrongLetterCounter() > 5 ) {
-            updateRounds()
-            disableKeyboard()
-            revealWord()
-            
-        }
-    } 
+}
+function checkLose() {
+    if(wrongClickedKeysArr.length > 5) {
+        revealWord()
+        updateRounds()
+        disableKeyboard()
+      
+    }
 }
 
 function updatePoints() {
@@ -244,20 +246,18 @@ function checkNextPhase() {
 function renderNextPhase() {
     let NextMode = currentMode == easyMode? mediumMode : currentMode == mediumMode ? hardMode : hardMode
     let round = totalRounds == 5 || totalRounds == 10 || totalRounds == 15
-    console.log(NextMode)
+    console.log(totalRounds)
     if(checkNextPhase() == false && round) {
       
-        if(NextMode == hardMode) {
+        if(currentMode == hardMode) {
             winnerAllModes()
         }
         else {
       currentMode = NextMode
         resetGame(NextMode)
       
-    popupHtml.innerHTML = `
-    <div class="popup">
-        <h2>NEXT PHASE</h2>
-    </div>`
+    popupHtml.innerHTML = popupNextPhaseInnerText()
+  
 
     get(".container").append(popupHtml)
     setTimeout(() => {
@@ -270,6 +270,7 @@ function renderNextPhase() {
 
 function winnerAllModes() {
     popupHtml.innerHTML = popupWinInnerText()
+    disableKeyboard()
     return get(".container").append(popupHtml)
 
 }
@@ -301,15 +302,15 @@ function revealWord() {
         })
 
         get(".word").innerHTML = updateWord()
-        console.log(checkNextPhase())
         
         console.log(get(".hangman"))
         if(checkNextPhase() == false) {
             console.log(checkNextPhase())
         setTimeout(() => {
+
             console.log("reveal")
             resetGame(currentMode)
-        },2000)
+        },3000)
     //}
     }
 }
