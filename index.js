@@ -58,7 +58,7 @@ cleanScore()
 function renderGame() {
    // console.log(a)
    get(".container").removeChild(menuHtml)
-   
+   get(".top-container").style.display = "flex"
    gameHtml.className = "game-container"
      gameHtml.innerHTML = `
     <div class=bottom-container flex>
@@ -314,16 +314,32 @@ function revealWord() {
     //}
     }
 }
-document.body.addEventListener("mouseover",async (e) => {
+
+async function getClue(e) {
     if(e.target.className == "info-icon") {
+        console.log("OI")
         let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
         renderClue(clue)
+        
     }
    else if(e.target.className !== "info-icon" && get(".info-icon")){ 
+    
     get(".clue-container").classList.remove("open")
     get(".clue-container").setAttribute("clue","")
    }
-}) 
+}
+get(".info-icon").addEventListener("mouseover", (e) => {
+  
+
+})
+document.body.addEventListener("mouseover",(e) => {
+    getClue(e)
+
+})
+document.body.addEventListener("touchstart",(e) => {
+    getClue(e)
+})
+
 
 getAll(".menu-option-btn").forEach(btn => btn.addEventListener("click",() => {
     console.log("Oiiii")

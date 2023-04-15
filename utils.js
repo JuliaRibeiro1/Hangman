@@ -42,9 +42,21 @@ async function getWordClue(url,word) {
         throw Error("Cor indisponível")
       }
       const data = await res.json()
-return data[0].meanings[0].definitions[0].definition
+     
+    return getShortDefinition(data[0].meanings[0].definitions[0].definition)
+
 
 }catch(err){alert(err)};
+}
+function getShortDefinition(definition) {
+  let short = ";" || "." || ":"
+    return definition.split(short)[0] + "."
+
+  
+  /*let shortest = ""
+  definitionsArr.map(definition => {
+    
+  })*/
 }
 function popupLoseInnerText() {
   return `
@@ -55,6 +67,7 @@ function popupLoseInnerText() {
   </div>`
 }
 function menuInnerText() {
+  get(".top-container").style.display = "none"
   return `<div class=menu>
   <h1>hangman</h1>
   <div class=menu-options-container>
