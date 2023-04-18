@@ -14,17 +14,17 @@ function leftArm() {
 //<rect x=38% y=0 width=5 height=80 fill=white></rect>
 function rightArm() {
     return get(".hangman").innerHTML += `<div class="right-arm-container"><svg class="right-arm">
-    <line  x1="64%" y1="0" x2="64%" y2="50"></line>
+    <line  x1="62%" y1="0" x2="62%" y2="50"></line>
   </svg></div>`
 }
 function leftLeg() {
     return get(".hangman").innerHTML += `<div class="left-leg-container"><svg class="left-leg">
-    <line  x1="38%" y1="0" x2="38%" y2="50" ></line>
+    <line  x1="43%" y1="0" x2="43%" y2="50" ></line>
   </svg></div>`
 }
 function rightLeg() {
     return get(".hangman").innerHTML += `<div class="right-leg-container"><svg class="right-leg">
-    <line  x1="64%" y1="0" x2="64%" y2="50" ></line>
+    <line  x1="57%" y1="0" x2="57%" y2="50" ></line>
   </svg></div>`
 }
 //<rect x=62% y=0 width=5 height=80 fill=white />
@@ -42,7 +42,8 @@ async function getWordClue(url,word) {
         throw Error("Cor indisponível")
       }
       const data = await res.json()
-     
+    /* console.log(data[0].meanings[0].definitions[0])
+     console.log(getShortDefinition(data[0].meanings[0].definitions[0].definition))*/
     return getShortDefinition(data[0].meanings[0].definitions[0].definition)
 
 
@@ -50,13 +51,19 @@ async function getWordClue(url,word) {
 }
 function getShortDefinition(definition) {
   let short = ";" || "." || ":"
-    return definition.split(short)[0] + "."
+   /* if(definition.split(short).length > 1) {
+        return definition.split(short)[0] + "."
+    } 
+    else {*/
+ if(definition.includes(short)) {
+  console.log("includes")
+      return definition.split(short)[0] + "."
+  //  }
+ }
+ else {
+  return definition
+ }
 
-  
-  /*let shortest = ""
-  definitionsArr.map(definition => {
-    
-  })*/
 }
 function popupLoseInnerText() {
   return `

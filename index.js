@@ -26,7 +26,6 @@ function getRandomWord(mode) {
     randomWordIndex = Math.floor(Math.random() * mode.length)
     randomWord = mode[randomWordIndex]
     randomWord = randomWord.replaceAll(' ', '');
-
     return randomWord
 }
 function updateArr(mode) {
@@ -34,22 +33,21 @@ function updateArr(mode) {
 }
 function renderKeyboard() {
     let keys = ""
-  alphabetArr.map((letter) => {
+    alphabetArr.map((letter) => {
     keys += renderKeys(letter)
   
   })
   return keys
   }
-//console.log(foods[randomWordIndex])
+
 function updateWord() {
 let loopPlaceholder = ""
-
+console.log(wordPlaceholderArr)
 wordPlaceholderArr.map((letter) => {
    loopPlaceholder += `<div class="word-placeholder">${letter}</div>`
-   //wordPlaceholderArr.fill()
 
 })
-//wordPlaceholderArr.fill(loopPlaceholder)
+
 return loopPlaceholder
 }
 let gameHtml = document.createElement("div")
@@ -81,13 +79,14 @@ function wordIncludesLetterCheck(e) {
         let check = getLetterIndex(e.target.textContent)
          fillWord(check,e.target.textContent)
          checkWin()
+         e.target.classList.add("correctLetter")
         
 }
 else {
     let len = wrongClickedKeysArr.length 
     let le = len - 1
     console.log(le)
-  
+    e.target.classList.add("wrongLetter")
     wrongClickedKeysArr.push(e.target.textContent)
     checkLose()
     hangmanBody[len]()
@@ -174,7 +173,7 @@ function cleanScore() {
     get(".total-rounds").textContent = totalRounds
 }
 function startGame(mode) {
-    
+    console.log(updateArr(mode))
     updateArr(mode)
     getRandomWord(mode)
     fillArrPlaceholder(mode)
@@ -285,7 +284,12 @@ function renderLoseMenu() {
     return get(".container").append(popupHtml)
 }
 function resetKeyboard() {
-    getAll(".key-btn").forEach(key => key.disabled = false)
+    getAll(".key-btn").forEach(key => {
+        key.disabled = false
+        key.classList.remove("wrongLetter")
+        key.classList.remove("correctLetter")
+    })
+    
 }
 function disableKeyboard() {
     getAll(".key-btn").forEach(key => key.disabled = true)
@@ -314,18 +318,22 @@ function revealWord() {
     //}
     }
 }
-
+let isClueDisplayed = false
 async function getClue(e) {
+    console.log(isClueDisplayed)
+    if(isClueDisplayed == false) {
     if(e.target.className == "info-icon") {
         console.log("OI")
         let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
         renderClue(clue)
+        isClueDisplayed = true
         
-    }
-   else if(e.target.className !== "info-icon" && get(".info-icon")){ 
+    }}
+   else if((e.target.className !== "info-icon" && get(".info-icon")) || isClueDisplayed == true){ 
     
     get(".clue-container").classList.remove("open")
     get(".clue-container").setAttribute("clue","")
+    isClueDisplayed = false
    }
 }
 get(".info-icon").addEventListener("mouseover", (e) => {
