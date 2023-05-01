@@ -141,11 +141,12 @@ button {
     height: 1.2em;
     border: 4px solid #3dcf3885;
     position: absolute;
-    width: 50%;
+    width: 30px;
     background-color: transparent;
     border-radius: 50%;
-    left:30%;
+    left:50%;
     top:30%;
+    transform: translate(-50%,0);
 }
 .key-btn {
     width: 10%;
@@ -208,14 +209,11 @@ button {
 }
 
 .head-container { 
-   
     z-index: 2;
-
-  
-   display: flex;
-  justify-content: center;
-margin-top: -50px;
-   align-items: start;
+    display: flex;
+    justify-content: center;
+    margin-top: -50px;
+    align-items: start;
   
 }
 .head {
@@ -261,7 +259,7 @@ margin-top: -50px;
 
 }
 .left-arm {
-   
+    
     animation: armAnimation .5s ;
     animation-iteration-count: 1
    
@@ -487,6 +485,7 @@ margin-top: -50px;
     animation: addPoints .5s ease-in;
 }
 .removeAnimation {
-    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+   /* animation-play-state: paused;*/
     
 }
