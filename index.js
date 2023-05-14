@@ -3,7 +3,7 @@ import {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,po
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
-const hangmanBody = [head,body,leftArm,rightArm,leftLeg,rightLeg]
+const hangmanBodyFunctions = [head,body,leftArm,rightArm,leftLeg,rightLeg]
 console.log("Oi")
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let easyMode = words.easy
@@ -72,6 +72,7 @@ function renderKeys(letter) {
     return `<button class=key-btn>${letter}</button>`
 }
 let arr = ["head","body","left-arm","right-arm","left-leg","right-leg"]
+let animations = ["headAnimation1","bodyAnimation","leftArmAnimation","rightArmAnimation","leftLegAnimation","rightLegAnimation"]
 let clickedKeysArr = []
 let wrongClickedKeysArr = []
 function wordIncludesLetterCheck(e) {
@@ -84,17 +85,21 @@ function wordIncludesLetterCheck(e) {
 }
 else {
     let len = wrongClickedKeysArr.length 
-    let le = len - 1
-    console.log(le)
+
     e.target.classList.add("wrongLetter")
     wrongClickedKeysArr.push(e.target.textContent)
     checkLose()
-    hangmanBody[len]()
-    if(len !== 0) {
-    setTimeout(() => {
-        get(`.${arr[le]}`).classList.add("removeAnimation")
-    },700)
-}
+    hangmanBodyFunctions[len]()
+ 
+  //  if(len !== 0) {
+     console.log(le)
+    //setTimeout(() => {
+        get(`.${arr[len]}`).classList.add(`${animations[len]}`)
+        setTimeout(() => {
+            get(`.${arr[len]}`).classList.remove(`${animations[len]}`)
+        },1000)
+   // },100)
+//}
   
 }}
 
@@ -118,8 +123,8 @@ function getLetterIndex(letter) {
 }
 let currentMode;
 document.body.addEventListener("click", (e) => {
-    console.log(e.target.id)
-    if(e.target.id == "easy-mode-btn") {
+   
+     if(e.target.id == "easy-mode-btn") {
         currentMode = easyMode
         startGame(currentMode)
         renderGame()
@@ -173,7 +178,6 @@ function cleanScore() {
     get(".total-rounds").textContent = totalRounds
 }
 function startGame(mode) {
-    console.log(updateArr(mode))
     updateArr(mode)
     getRandomWord(mode)
     fillArrPlaceholder(mode)
@@ -320,31 +324,29 @@ function revealWord() {
 }
 let isClueDisplayed = false
 async function getClue(e) {
-    console.log(isClueDisplayed)
-    if(isClueDisplayed == false) {
-    if(e.target.className == "info-icon") {
-        console.log("OI")
+    if(isClueDisplayed === false) {
+    if(e.target.className === "clue-button" || e.target.className === "info-icon" ) {
         let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
         renderClue(clue)
         isClueDisplayed = true
         
     }}
-   else if((e.target.className !== "info-icon" && get(".info-icon")) || isClueDisplayed == true){ 
-    
+   else if(isClueDisplayed === true){ 
     get(".clue-container").classList.remove("open")
     get(".clue-container").setAttribute("clue","")
     isClueDisplayed = false
    }
 }
-get(".info-icon").addEventListener("mouseover", (e) => {
-  
+/*get(".info-icon").addEventListener("click", (e) => {
+   console.log("simm")
 
-})
+})*/
 document.body.addEventListener("mouseover",(e) => {
     getClue(e)
 
 })
 document.body.addEventListener("touchstart",(e) => {
+    console.log("OI")
     getClue(e)
 })
 

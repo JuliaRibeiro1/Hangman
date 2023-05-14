@@ -9,7 +9,7 @@
 }
 .clue-container,.points-container{
     position: absolute;
-    
+    z-index: 5;
 }
 .top-container {
     display: flex;
@@ -235,12 +235,12 @@ button {
     margin-bottom: 0;
     stroke-dasharray:471;
     stroke-dashoffset: 471;
-   
     transform-origin: center;
-    animation: .5s headAnimation ease-in forwards;
     animation-iteration-count: 1
 }
-  
+.headAnimation1 {
+    animation: .5s headAnimation ease-in forwards;
+}
 .body-container {
     height: 40%;
     top:50%;
@@ -260,8 +260,7 @@ button {
 }
 .left-arm {
     
-    animation: armAnimation .5s ;
-    animation-iteration-count: 1
+
    
     /* animation: armAnimation 2s ;*/
 }
@@ -277,9 +276,15 @@ button {
 .right-arm {
   /*  margin-top: -130px;
     margin-left: 50px;*/
-    animation: armAnimation .5s ease-in forwards;
-    animation-iteration-count: 1
     
+  
+    
+}
+.leftArmAnimation{
+    animation: armAnimation .5s ;
+}
+.rightArmAnimation {
+    animation: armAnimation .5s ease-in forwards;
 }
 .left-leg-container {
     stroke-width: 5;
@@ -292,9 +297,9 @@ button {
     
   
 }
-.left-leg {
+.leftLegAnimation {
+  
     animation: armAnimation .5s forwards;
-    
    
 }
 .right-leg-container {
@@ -308,7 +313,7 @@ button {
     
    
 }
-.right-leg {
+.rightLegANimation {
     animation: armAnimation .5s ease-in forwards;
    
 }
@@ -316,9 +321,12 @@ button {
     stroke-width:5;
     transform: rotate(360deg);
     height: 80px;
-    animation: bodyAnimation .5s  ;
+  
     animation-iteration-count: 1
  
+}
+.bodyAnimation {
+    animation: bodyAnimation .5s  ;
 }
 .open:before,.open:after {
     display: block;
@@ -459,8 +467,6 @@ button {
    
     font-size: 1rem;
     width: 80%;
-    
-   
   
    }
    .word-placeholder {
