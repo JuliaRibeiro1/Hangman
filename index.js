@@ -1,15 +1,22 @@
-import {words} from "./wordsData.js"
+
 import {head,body,leftArm,rightArm,leftLeg,rightLeg,getWordClue,menuInnerText,popupLoseInnerText,popupWinInnerText,popupNextPhaseInnerText} from "./utils.js"
 
 const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
 const hangmanBodyFunctions = [head,body,leftArm,rightArm,leftLeg,rightLeg]
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-let easyMode = words.easy
-let mediumMode = words.medium
-let hardMode = words.hard
+const modeMap = {
+    easy: { text: "EASY MODE", color: "green", words: ["APPLE","NOSE","CAT","SHOULDERS","LEMON","MOTHER","HAT","CABBAGE","HOME","PASTA","BOOK",
+    "EGG","DOG","COAT","LASAGNA","GARDEN","HORSE","PAPER","BIRD","MILK","SMOKE","COW","EYE","BREAD","CHICKEN","SNOW","SHOES","WATER","LETTER","FLOWER","CHAIR","BABY","HAPPY","FRIEND","ACTOR","JUICE","LADY","RAIN"] },
+    medium: { text: "MEDIUM MODE", color: "orange",words:["AQUATIC","EVIDENT","DIVERSITY","KANGAROO","ALCOHOL","BUSINESS","FREEDOM","NEIGHBOR","PLANET",
+    "STOMACH","MARKET","INTERVIEW","PHENOMENON","CELEBRATION","GRAVE","SHRIMP","TRIVIA","COUNTRY","SMILE","USEFUL","TELEPHONE","PANCAKE","LEGACY","RESTAURANT","SINGLE","DANGEROUS","LEOPARD","POLAR BEAR","MACHINE","SILENCE"] },
+    hard: { text: "HARD MODE", color: "red", words:["VIRTUAL","EMPATHY","MARGARINE","IRONY","HAM","SYNTAX","OTTER","CLANDESTINE","OGRE","PRESAGE","HOLISTIC","PARADOX","SATIRE","YOUNG ADULT","REFLECTION","SCIENCE","AMBIVALENT","PARADIGM",
+    "CALUMNY","UBIQUITOUS","APATHETIC","NEGLIGENT","VOCIFEROUS","STATE","RHYTHM"]},
+};
+
 let randomWord = ""
 let wordPlaceholderArr;
+let currentMode;
 
 function fillArrPlaceholder() {
     wordPlaceholderArr= new Array(randomWord.length)
@@ -18,14 +25,16 @@ function fillArrPlaceholder() {
 
 let randomWordIndex = ""
 function getRandomWord(mode) {
-    randomWordIndex = Math.floor(Math.random() * mode.length)
-    randomWord = mode[randomWordIndex]
-    updateArr(mode)
+    let words = mode.words
+    randomWordIndex = Math.floor(Math.random() * words.length)
+    randomWord = words[randomWordIndex]
+    updateArr(words)
     randomWord = randomWord.replaceAll(' ', '')
     return randomWord
 }
 
 function updateArr(mode) {
+    console.log(mode)
     return mode.splice(randomWordIndex,1)
 }
 
@@ -107,11 +116,10 @@ function getLetterIndex(letter) {
     return rightLetterIndexArr
 }
 
-let currentMode;
 
 document.body.addEventListener("click", (e) => {
      if(e.target.id == "easy-mode-btn" || e.target.id == "medium-mode-btn" || e.target.id == "hard-mode-btn") {
-        currentMode = e.target.id == "easy-mode-btn"  ? easyMode : e.target.id == "medium-mode-btn" ? mediumMode : hardMode
+        currentMode = e.target.id == "easy-mode-btn"  ? modeMap.easy : e.target.id == "medium-mode-btn" ? modeMap.medium : modeMap.hard
         startGame(currentMode)
         renderGame()
     }
@@ -142,24 +150,21 @@ function cleanScore() {
     get(".points span").textContent = points
     get(".total-rounds").textContent = totalRounds
 }
+
+  function setModeTextAndColor(mode) {
+    console.log(mode)
+    const modeInfo = mode;
+    get(".mode").textContent = modeInfo.text;
+    get(".mode").style.color = modeInfo.color;
+  }
 function startGame(mode) {
     getRandomWord(mode)
     fillArrPlaceholder(mode)
     resetKeyboard()
     clickedKeysArr.length = 0
     wrongClickedKeysArr.length = 0
-    if(currentMode === easyMode) {
-        get(".mode").textContent = "EASY MODE"
-        get(".mode").style.color = "green"
+    setModeTextAndColor(mode)
     }
-    else if(currentMode === mediumMode) {
-        get(".mode").textContent = "MEDIUM MODE"
-        get(".mode").style.color = "orange"
-    }
-    else {
-        get(".mode").textContent = "HARD MODE"
-        get(".mode").style.color = "red"
-    }}
 
 function resetGame(mode) {
     startGame(mode)
@@ -196,7 +201,7 @@ function updatePoints() {
 
 function updateRounds() {
     renderNextPhase()
-    if(wrongClickedKeysArr.length < 5) {
+    if(wrongClickedKeysArr.length < 6) {
         winRounds+=1
         get(".win-rounds").textContent = winRounds
     }
@@ -217,12 +222,12 @@ function checkNextPhase() {
 
 let isRenderingNextPhase = false
 function renderNextPhase() {
-    let NextMode = currentMode == easyMode? mediumMode : currentMode == mediumMode ? hardMode : hardMode
-    let round = totalRounds == 1 || totalRounds == 10 || totalRounds == 15
+    let NextMode = currentMode == modeMap.easy? modeMap.medium : currentMode == modeMap.medium ? modeMap.hard : modeMap.hard
+    let round = totalRounds == 5 || totalRounds == 10 || totalRounds == 15
    
     if(checkNextPhase() == false && round) {
        isRenderingNextPhase = true
-        if(currentMode == hardMode) {
+        if(currentMode == modeMap.hard) {
             winnerAllModes()
             isRenderingNextPhase = false
         }

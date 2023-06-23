@@ -52,7 +52,6 @@ function getShortDefinition(definition) {
   let short = ";" || "." || ":"
  
  if(definition.includes(short)) {
-  console.log("includes")
       return definition.split(short)[0] + "."
 
  }
