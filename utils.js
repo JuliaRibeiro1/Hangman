@@ -11,7 +11,7 @@ function leftArm() {
     <line  x1="38%" y1="0" x2="38%" y2="50"></line>
   </svg></div>`
 }
-//<rect x=38% y=0 width=5 height=80 fill=white></rect>
+
 function rightArm() {
     return get(".hangman").innerHTML += `<div class="right-arm-container"><svg class="right-arm">
     <line  x1="62%" y1="0" x2="62%" y2="50"></line>
@@ -27,13 +27,13 @@ function rightLeg() {
     <line  x1="57%" y1="0" x2="57%" y2="50" ></line>
   </svg></div>`
 }
-//<rect x=62% y=0 width=5 height=80 fill=white />
+
 function body() {
     return get(".hangman").innerHTML += `<div class="body-container"><svg class="body">
     <line  x1="50%" y1="0" x2="50%" y2="80" ></line>
   </svg></div>`
 }
-//x1=50% x2=0 width=5 height=110
+
 async function getWordClue(url,word) {
   try{
       const res = await fetch(`${url}${word}`) 
@@ -42,8 +42,7 @@ async function getWordClue(url,word) {
         throw Error("Cor indisponível")
       }
       const data = await res.json()
-    /* console.log(data[0].meanings[0].definitions[0])
-     console.log(getShortDefinition(data[0].meanings[0].definitions[0].definition))*/
+
     return getShortDefinition(data[0].meanings[0].definitions[0].definition)
 
 
@@ -51,14 +50,11 @@ async function getWordClue(url,word) {
 }
 function getShortDefinition(definition) {
   let short = ";" || "." || ":"
-   /* if(definition.split(short).length > 1) {
-        return definition.split(short)[0] + "."
-    } 
-    else {*/
+ 
  if(definition.includes(short)) {
   console.log("includes")
       return definition.split(short)[0] + "."
-  //  }
+
  }
  else {
   return definition
