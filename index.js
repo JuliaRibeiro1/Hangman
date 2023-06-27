@@ -5,12 +5,13 @@ const get = element => document.querySelector(element)
 const getAll = element => document.querySelectorAll(element)
 const hangmanBodyFunctions = [head,body,leftArm,rightArm,leftLeg,rightLeg]
 const alphabetArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+
 const modeMap = {
     easy: { text: "EASY MODE", color: "green", words: ["APPLE","NOSE","CAT","SHOULDERS","LEMON","MOTHER","HAT","CABBAGE","HOME","PASTA","BOOK",
     "EGG","DOG","COAT","LASAGNA","GARDEN","HORSE","PAPER","BIRD","MILK","SMOKE","COW","EYE","BREAD","CHICKEN","SNOW","SHOES","WATER","LETTER","FLOWER","CHAIR","BABY","HAPPY","FRIEND","ACTOR","JUICE","LADY","RAIN"] },
     medium: { text: "MEDIUM MODE", color: "orange",words:["AQUATIC","EVIDENT","DIVERSITY","KANGAROO","ALCOHOL","BUSINESS","FREEDOM","NEIGHBOR","PLANET",
     "STOMACH","MARKET","INTERVIEW","PHENOMENON","CELEBRATION","GRAVE","SHRIMP","TRIVIA","COUNTRY","SMILE","USEFUL","TELEPHONE","PANCAKE","LEGACY","RESTAURANT","SINGLE","DANGEROUS","LEOPARD","POLAR BEAR","MACHINE","SILENCE"] },
-    hard: { text: "HARD MODE", color: "red", words:["VIRTUAL","EMPATHY","MARGARINE","IRONY","HAM","SYNTAX","OTTER","CLANDESTINE","OGRE","PRESAGE","HOLISTIC","PARADOX","SATIRE","YOUNG ADULT","REFLECTION","SCIENCE","AMBIVALENT","PARADIGM",
+    hard: { text: "HARD MODE", color: "red", words:["VIRTUAL","EMPATHY","MARGARINE","IRONY","HAM","SYNTAX","OTTER","CLANDESTINE","OGRE","PRESAGE","HOLISTIC","PARADOX","SATIRE","REFLECTION","SCIENCE","AMBIVALENT","PARADIGM",
     "CALUMNY","UBIQUITOUS","APATHETIC","NEGLIGENT","VOCIFEROUS","STATE","RHYTHM"]},
 };
 
@@ -25,16 +26,15 @@ function fillArrPlaceholder() {
 
 let randomWordIndex = ""
 function getRandomWord(mode) {
+
     let words = mode.words
     randomWordIndex = Math.floor(Math.random() * words.length)
     randomWord = words[randomWordIndex]
     updateArr(words)
-    randomWord = randomWord.replaceAll(' ', '')
     return randomWord
 }
 
-function updateArr(mode) {
-    console.log(mode)
+function updateArr(mode) { // irá remover a palavra que já foi "sorteada" para o usuário do array words
     return mode.splice(randomWordIndex,1)
 }
 
@@ -44,14 +44,14 @@ function renderKeyboard() {
     keys +=  `<button class=key-btn>${letter}</button>`
   })
   return keys
-  }
+}
 
-function updateWord() {
+function updateWord(word) {
     let loopPlaceholder = ""
-    wordPlaceholderArr.map((letter) => {
+    word.map((letter) => {
     loopPlaceholder += `<div class="word-placeholder">${letter}</div>`
-})
-return loopPlaceholder
+    })
+    return loopPlaceholder
 }
 
 let gameHtml = document.createElement("div")
@@ -64,7 +64,7 @@ function renderGame() {
    gameHtml.className = "game-container"
      gameHtml.innerHTML = `
     <div class=bottom-container flex>
-    <div class="word">${updateWord()}</div>
+    <div class="word">${updateWord(wordPlaceholderArr)}</div>
     <div class="keyboard-container">${renderKeyboard()}</div>
     </div>`
   
@@ -79,8 +79,8 @@ let wrongClickedKeysArr = []
 function wordIncludesLetterCheck(e) {
 if(!isRenderingNextPhase) {
     if(randomWord.includes(e.target.textContent)) {
-        let check = getLetterIndex(e.target.textContent)
-         fillWord(check,e.target.textContent)
+        let checkIndex = getLetterIndex(e.target.textContent) // SE aquela palavra possui a letra que o usuário clicou ele será 
+         fillWord(checkIndex,e.target.textContent)
          checkWin()
          e.target.classList.add("correctLetter")
 }
@@ -92,16 +92,16 @@ if(!isRenderingNextPhase) {
         hangmanBodyFunctions[i]()
         get(`.${arr[i]}`).classList.add(`${animations[i]}`)
         setTimeout(() => {
-            get(`.${arr[i]}`).classList.remove(`${animations[i]}`)
+            get(`.${arr[i]}`).classList.remove(`${animations[i]}`) // Irá evitar com que ocorra todas as animações do "corpo" se repita quando um novo membro é adicinado.
         },500)
     }
 }}
 
 function fillWord(check,letter) {
     check.map(item => {
-        wordPlaceholderArr[item] = letter
+        wordPlaceholderArr[item] = letter // Irá substituir os traços pelas letras que se encontram no indice correspondente.
     })
-    get(".word").innerHTML = updateWord()
+    get(".word").innerHTML = updateWord(wordPlaceholderArr)
     return wordPlaceholderArr
 }
 function getLetterIndex(letter) {
@@ -110,16 +110,16 @@ function getLetterIndex(letter) {
     
     for(let i = 0; i < wordArr.length;i++) {
         if(wordArr[i] == letter) {
-            rightLetterIndexArr.push(i)
+            rightLetterIndexArr.push(i) // irá retornar qual são os index que aquela letra se encontra na palavra para que o espaço possa ser preenchido.
         }
     }
     return rightLetterIndexArr
 }
 
-
 document.body.addEventListener("click", (e) => {
      if(e.target.id == "easy-mode-btn" || e.target.id == "medium-mode-btn" || e.target.id == "hard-mode-btn") {
         currentMode = e.target.id == "easy-mode-btn"  ? modeMap.easy : e.target.id == "medium-mode-btn" ? modeMap.medium : modeMap.hard
+        isRenderingNextPhase = false
         startGame(currentMode)
         renderGame()
     }
@@ -152,11 +152,11 @@ function cleanScore() {
 }
 
   function setModeTextAndColor(mode) {
-    console.log(mode)
     const modeInfo = mode;
     get(".mode").textContent = modeInfo.text;
     get(".mode").style.color = modeInfo.color;
   }
+
 function startGame(mode) {
     getRandomWord(mode)
     fillArrPlaceholder(mode)
@@ -168,7 +168,7 @@ function startGame(mode) {
 
 function resetGame(mode) {
     startGame(mode)
-    get(".word").innerHTML = updateWord()
+    get(".word").innerHTML = updateWord(wordPlaceholderArr)
     get(".hangman").innerHTML = `<img src="images/icons8-hang-100.png"/>`
 }
 
@@ -210,11 +210,10 @@ function updateRounds() {
 }
 
 function checkNextPhase() {
-    if(totalRounds == winRounds  + 2) {
+    if(totalRounds === winRounds  + 2) { // o usuário perde jogo caso o usuáiro perca 3 vezes
         renderLoseMenu()
         return true
-    }
-    else {
+    }else {
       
         return false
     }
@@ -223,13 +222,17 @@ function checkNextPhase() {
 let isRenderingNextPhase = false
 function renderNextPhase() {
     let NextMode = currentMode == modeMap.easy? modeMap.medium : currentMode == modeMap.medium ? modeMap.hard : modeMap.hard
-    let round = totalRounds == 5 || totalRounds == 10 || totalRounds == 15
+    let round = totalRounds == 2 || totalRounds == 10 || totalRounds == 15
    
     if(checkNextPhase() == false && round) {
        isRenderingNextPhase = true
+       disableKeyboard()
         if(currentMode == modeMap.hard) {
-            winnerAllModes()
-            isRenderingNextPhase = false
+            setTimeout(() => {
+                winnerAllModes()
+               
+            },1500)
+           
         }
         else {
         currentMode = NextMode
@@ -244,7 +247,6 @@ function renderNextPhase() {
 
 function winnerAllModes() {
     popupHtml.innerHTML = popupWinInnerText()
-    disableKeyboard()
     return get(".container").append(popupHtml)
 }
 
@@ -269,12 +271,8 @@ function disableKeyboard() {
 }
 
 function revealWord() {
-        Array.from(randomWord).map((letter) => {
-            let check = getLetterIndex(letter)
-            fillWord(check,letter)
-        })
-        get(".word").innerHTML = updateWord()
-        
+       get(".word").innerHTML = updateWord(Array.from(randomWord)) // Revela a palavra correta ao usuário.
+
       if(checkNextPhase() == false) {
         setTimeout(() => {
             resetGame(currentMode)
@@ -283,7 +281,7 @@ function revealWord() {
 }
 
 async function getClue(e) {
-    if(e.target.className === "clue-button" || e.target.className === "info-icon" ) {
+    if(e.target.className === "clue-button"  || e.target.className === "info-icon" ) {
         let clue = await getWordClue(`https://api.dictionaryapi.dev/api/v2/entries/en/`,randomWord)
         renderClue(clue)      
     } 

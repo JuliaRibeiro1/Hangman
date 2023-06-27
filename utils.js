@@ -52,7 +52,7 @@ function getShortDefinition(definition) {
   let short = ";" || "." || ":"
  
  if(definition.includes(short)) {
-      return definition.split(short)[0] + "."
+      return definition.split(short)[0] + "." // serve para "cortar" a definição para deixar o texto mais curto e resumido.
 
  }
  else {
